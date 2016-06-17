@@ -116,6 +116,7 @@ if platform_name == 'Linux': #rar, tobey VM, Colin, Vijay, Helene VM(?)
 
   compiler_flags = '-Werror -ansi -g -fPIC -DBOOST_ALL_DYN_LINK -DGNU_FPE'
   platform_libs = libs
+  platform_libs.append('profiler')
 
 
 elif platform_name == 'Darwin': #tobey

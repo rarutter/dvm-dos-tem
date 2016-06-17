@@ -16,7 +16,7 @@
 
     "output_dir":         "DATA/Toolik_10x10_30yrs/output/",
 
-    "output_monthly":     1
+    "output_monthly":     0 
   },
 
   // Define storage locations for json files generated and used
