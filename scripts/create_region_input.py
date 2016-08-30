@@ -42,6 +42,7 @@ def make_run_mask(filename, sizey=10, sizex=10):
   print " --> NOTE: Turning off all pixels except 0,0."
   run[:] = np.zeros((sizey, sizex))
   run[0,0] = 1
+  run[0,1] = 1
     
   ncfile.close()
 

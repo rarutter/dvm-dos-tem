@@ -6,6 +6,7 @@ import os
 import platform
 import distutils.spawn
 
+USEOMP = True
 USEMPI = True
 
 libs = Split("""jsoncpp
@@ -150,6 +151,10 @@ if comp_name == 'aeshna': #aeshna... check name
 
 #atlas?
 
+if(USEOMP):
+  #append build flag for openmp
+  compiler_flags = compiler_flags + ' -fopenmp'
+  platform_libs.append('-fopenmp')
 
 if(USEMPI):
   #append src/parallel-code stuff to src_files and include_paths and libs
