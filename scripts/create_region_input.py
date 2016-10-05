@@ -501,7 +501,7 @@ def fill_fri_fire_file(if_name, xo, yo, xs, ys, out_dir, of_name):
   with netCDF4.Dataset(of_name, mode='a') as nfd:
 
     print "==> set arbitrary fri value (same for all pixels; for easy testing)..."
-    nfd.variables['fri'][:,:] = 500
+    nfd.variables['fri'][:,:] = 300
 
     print "==> fill with random severity..."
     nfd.variables['fri_severity'][:,:] = np.random.randint(0, 5, (ys,xs))

@@ -397,8 +397,8 @@ void Ground::initSnowSoilLayers() {
 
     bool moss_pft_exists = false;
     //if ANY of the nonvascular PFTs have vegcov
-    for(int ii=0; ii<NUM_PFT; ii++){
-      if(chtlu->vegcov[ii]>0.0){
+    for(int ip=0; ip<NUM_PFT; ip++){
+      if(chtlu->nonvascular[ip]>0 && chtlu->vegcov[ip]>0.0){
         moss_pft_exists = true;
       }
     }
@@ -1715,16 +1715,47 @@ double Ground::adjustSoilAfterburn() {
                       //  (otherwise, bug here)
   }
 
+  //Total nonvascular biomass post-fire
+  BOOST_LOG_SEV(glg, debug)<<"Calculating total nonvascular biomass post fire";
+  double lmoss_c = 0.0;
+  for(int ip = 0; ip<NUM_PFT; ip++){
+    if(chtlu->nonvascular[ip] > 0){
+      lmoss_c += bd[ip]->m_vegs.call;
+    }
+  }
+  BOOST_LOG_SEV(glg, debug)<<"Total moss biomass: "<<lmoss_c;
+
   // remove all moss/organic layers, if C is zero, after fire
   currl = fstsoill;
 
-  while (currl!=NULL) {
-    if(currl->isMoss || currl->isOrganic) {
-      double tsomc = currl->rawc + currl->soma + currl->sompr + currl->somcr;
+  //Assumptions: there are two moss layers, one living, one dead.
+  //They may be empty, which is why were are checking here.
+  //If empty, delete.
 
-      if (currl->isMoss && !currl->nextl->isMoss) {
-        tsomc += moss.dmossc;
-      }
+  //live moss layer - first layer. If lmoss_c<=0, delete
+  if(currl->isMoss && lmoss_c <=0.0){
+    BOOST_LOG_SEV(glg, debug)<<"Removing live moss layer due to lack of nonvascular biomass";
+    adjustFrontsAfterThickchange(0, -currl->dz);
+    removeLayer(currl);
+    currl = toplayer;
+  }
+  currl = currl->nextl;
+  //dead moss layer - second layer. If there is no dead moss c and next layer is a different type, do not remove
+  if(currl->isMoss && moss.dmossc <= 0){
+    BOOST_LOG_SEV(glg, debug)<<"Removing dead moss layer due to lack of carbon pool";
+    adjustFrontsAfterThickchange(0, -currl->dz);
+    removeLayer(currl);
+    currl = toplayer;
+  }
+  else if (currl->isMoss && moss.dmossc > 0){
+    currl->dz = 0.005;
+  }
+  currl = currl->nextl;
+
+  while (currl!=NULL) {
+    if(currl->isOrganic) {
+      double tsomc = currl->rawc + currl->soma + currl->sompr + currl->somcr;
+      BOOST_LOG_SEV(glg, debug)<<"Organic layer, tsomc: "<<tsomc;
 
       if(tsomc <= 0.0) {
         bdepthadj += currl->dz; //adding the removed layer thickness to
@@ -2424,5 +2455,9 @@ void Ground::cleanAllLayers() {
 
 void Ground::setCohortLookup(CohortLookup* chtlup) {
   chtlu = chtlup;
+};
+
+void Ground::setBgcData(BgcData* bdp, const int &ip){
+  bd[ip] = bdp;
 };
 

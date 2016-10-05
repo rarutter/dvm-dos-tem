@@ -198,7 +198,7 @@ bool WildFire::should_ignite(const int yr, const int midx, const std::string& st
 }
 
 /** Burning vegetation and soil organic C */
-void WildFire::burn(int year) {
+void WildFire::burn(int year, Ground &ground) {
   BOOST_LOG_NAMED_SCOPE("burning");
   BOOST_LOG_SEV(glg, note) << "HELP!! - WILD FIRE!! RUN FOR YOUR LIFE!";
 
@@ -216,7 +216,7 @@ void WildFire::burn(int year) {
   double burndepth = getBurnOrgSoilthick(this->actual_severity);
   BOOST_LOG_SEV(glg, debug) << fd->report_to_string("After WildFire::getBurnOrgSoilthick(..)");
 
-  BOOST_LOG_SEV(glg, note) << "Setup some temporarty pools for tracking various burn related attributes (depths, C, N)";
+  BOOST_LOG_SEV(glg, note) << "Setup some temporary pools for tracking various burn related attributes (depths, C, N)";
   double totbotdepth = 0.0;
   double burnedsolc = 0.0;
   double burnedsoln = 0.0;
@@ -226,19 +226,38 @@ void WildFire::burn(int year) {
                            //  and calculated below
   }
 
-  // NOTE: Here we operates on soil portion of 'bdall', later will copy that
+  // NOTE: Here we operate on soil portion of 'bdall', later will copy that
   // to other PFTs if any
 
   if (bdall->m_sois.dmossc > 0.0) {
-    BOOST_LOG_SEV(glg, debug) << "Burning all dead moss biomass. (Move C and N from bdall soil pool to 'burned' pool)";
-    burnedsolc += bdall->m_sois.dmossc;
-    burnedsoln += bdall->m_sois.dmossn;
-    bdall->m_sois.dmossc = 0.0;
-    bdall->m_sois.dmossn = 0.0;
+    BOOST_LOG_SEV(glg, debug) << "Burning most of dead moss biomass. (Move C and N from bdall soil pool to 'burned' pool)";
+
+    //Maximum dead moss C that can burn.
+    //Option 1: based on percent of carbon pool size
+    //Option 2: based on minimum layer thickness
+    //double dmossc_max_burn = 0.99*bdall->m_sois.dmossc; //Option 1
+    double thickness = cd->m_soil.dz[1];
+    //this following code should ultimately refer to the function instead of the formula;
+    double minthick=0.005;
+    //the following coefficients could be pulled from chtlu instead...
+    double C = ground.soildimpar.coefmossa * pow((minthick)*100.0, ground.soildimpar.coefmossb);//m to cm
+    C = C * 10000.0; //from gC/cm^2 to gC/m^2
+    double dmossc_max_burn = bdall->m_sois.dmossc-C; //Option 2
+
+    double dmossn_max_burn = bdall->m_sois.dmossn*dmossc_max_burn/bdall->m_sois.dmossc;
+
+    //FIX - this could introduce errors due to roundoff.
+    //The values should be more related to each other...
+    burnedsolc += dmossc_max_burn;
+    burnedsoln += dmossn_max_burn;
+    bdall->m_sois.dmossc = bdall->m_sois.dmossc - dmossc_max_burn;
+    bdall->m_sois.dmossn = bdall->m_sois.dmossn - dmossn_max_burn;
+
+    totbotdepth += thickness-minthick;
   }
 
   BOOST_LOG_SEV(glg, debug) << "Handle burning the soil (loop over all soil layers)...";
-  for (int il = 0; il < cd->m_soil.numsl; il++) {
+  for (int il = 2; il < cd->m_soil.numsl; il++) {
 
     BOOST_LOG_SEV(glg, debug) << "== Layer Info == "
                               << "   type:" << cd->m_soil.type[il] // 0:moss 1:shlwpeat 2:deeppeat 3:mineral
@@ -248,8 +267,6 @@ void WildFire::burn(int year) {
 
     if(cd->m_soil.type[il] <= 2) {
 
-
-
       totbotdepth += cd->m_soil.dz[il];
 
       double ilsolc =  bdall->m_sois.rawc[il] + bdall->m_sois.soma[il] +
@@ -257,25 +274,45 @@ void WildFire::burn(int year) {
 
       double ilsoln =  bdall->m_sois.orgn[il] + bdall->m_sois.avln[il];
 
-      if(totbotdepth <= burndepth) { //remove all the orgc/n in this layer
+      if(totbotdepth <= burndepth) { //Burns deeper than current layer
+        BOOST_LOG_SEV(glg, debug) << "totbotdepth: "<<totbotdepth;
         BOOST_LOG_SEV(glg, debug) << "Haven't reached burndepth (" << burndepth << ") yet. Remove all org C and N in this layer";
-        burnedsolc += ilsolc;
-        burnedsoln += ilsoln;
-        bdall->m_sois.rawc[il] = 0.0;
-        bdall->m_sois.soma[il] = 0.0;
-        bdall->m_sois.sompr[il]= 0.0;
-        bdall->m_sois.somcr[il]= 0.0;
-        bdall->m_sois.orgn[il] = 0.0;
-        bdall->m_sois.avln[il] = 0.0;
+        if(cd->m_soil.type[il+1] != cd->m_soil.type[il]){//Next layer is not the same type as current
+          BOOST_LOG_SEV(glg, debug)<<"Next layer is the same type as current layer, so burn entire layer.";
+          burnedsolc += 0.99*ilsolc;
+          burnedsoln += 0.99*ilsoln;
+          bdall->m_sois.rawc[il] = 0.01*bdall->m_sois.rawc[il];
+          bdall->m_sois.soma[il] = 0.01*bdall->m_sois.soma[il];
+          bdall->m_sois.sompr[il]= 0.01*bdall->m_sois.sompr[il];
+          bdall->m_sois.somcr[il]= 0.01*bdall->m_sois.somcr[il];
+          bdall->m_sois.orgn[il] = 0.01*bdall->m_sois.orgn[il];
+          bdall->m_sois.avln[il] = 0.01*bdall->m_sois.avln[il];
 
-        for (int ip=0; ip<NUM_PFT; ip++) {
-          if (cd->m_veg.vegcov[ip]>0.) {
-            r_burn2bg_cn[ip] += cd->m_soil.frootfrac[il][ip];
-            cd->m_soil.frootfrac[il][ip] = 0.0;
+          for (int ip=0; ip<NUM_PFT; ip++) {
+            if (cd->m_veg.vegcov[ip]>0.) {
+              r_burn2bg_cn[ip] += 0.99*cd->m_soil.frootfrac[il][ip];
+              cd->m_soil.frootfrac[il][ip] = 0.01*cd->m_soil.frootfrac[il][ip];
+            }
+          }
+        } else{//Next layer is the same type as current layer
+          burnedsolc += ilsolc;
+          burnedsoln += ilsoln;
+          bdall->m_sois.rawc[il] = 0.0;
+          bdall->m_sois.soma[il] = 0.0;
+          bdall->m_sois.sompr[il] = 0.0;
+          bdall->m_sois.somcr[il] = 0.0;
+          bdall->m_sois.orgn[il] = 0.0;
+          bdall->m_sois.avln[il] = 0.0;
+          for(int ip=0; ip<NUM_PFT; ip++){
+            if(cd->m_veg.vegcov[ip]>0.){
+              r_burn2bg_cn[ip] += cd->m_soil.frootfrac[il][ip];
+              cd->m_soil.frootfrac[il][ip] = 0.0;
+            }
           }
         }
       } else {
-        BOOST_LOG_SEV(glg, debug) << "The bottom of this layer (il: " << il << ") is past the 'burndepth'. Find the remaining C and N as a fraction of layer thickness";
+        BOOST_LOG_SEV(glg, debug) << "totbotdepth: "<<totbotdepth;
+        BOOST_LOG_SEV(glg, debug) << "The bottom of this layer (il: " << il << ") is past the burndepth ("<<burndepth<<"). Find the remaining C and N as a fraction of layer thickness";
         double partleft = totbotdepth - burndepth;
 
         // Calculate the remaining C, N
@@ -333,10 +370,10 @@ void WildFire::burn(int year) {
 
   // all woody debris will burn out
   BOOST_LOG_SEV(glg, note) << "Handle burnt woody debris...";
-  double wdebrisc = bdall->m_sois.wdebrisc; //
-  double wdebrisn = bdall->m_sois.wdebrisn; //
-  bdall->m_sois.wdebrisc = 0.0;
-  bdall->m_sois.wdebrisn = 0.0;
+  double wdebrisc = 0.99*bdall->m_sois.wdebrisc; //
+  double wdebrisn = 0.99*bdall->m_sois.wdebrisn; //
+  bdall->m_sois.wdebrisc = 0.01*bdall->m_sois.wdebrisc;
+  bdall->m_sois.wdebrisn = 0.01*bdall->m_sois.wdebrisn;
 
   // summarize
   BOOST_LOG_SEV(glg, note) << "Summarize...?";

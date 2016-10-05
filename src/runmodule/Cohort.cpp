@@ -178,6 +178,7 @@ void Cohort::initialize_internal_pointers() {
 
   for (int i=0; i<NUM_PFT; i++) {
     fire.setBgcData(&bd[i], i);
+    ground.setBgcData(&bd[i], i);
   }
 
   fire.setFirData(fd);
@@ -716,7 +717,7 @@ void Cohort::updateMonthly_Fir(const int & year, const int & midx, std::string s
     // Fire!
     //  - Update C/N pools for each pft through 'bd', but not soil structure.
     //  - Soil root fraction also updated through 'cd'.
-    fire.burn(year);
+    fire.burn(year, ground);
     
     BOOST_LOG_SEV(glg, debug) << "Right after fire.burn(..)  " << ground.layer_report_string();
 

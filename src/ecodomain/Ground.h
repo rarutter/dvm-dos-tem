@@ -25,6 +25,7 @@ using namespace std;
 #include "../lookup/CohortLookup.h"
 
 #include "../data/CohortData.h"
+#include "../data/BgcData.h"
 #include "../data/FirData.h"
 #include "../data/RestartData.h"
 
@@ -95,6 +96,7 @@ public :
   // 0: partially frozen, 1: totally frozen,, -1: totally unfrozen
 
   void setCohortLookup(CohortLookup *chtlu);
+  void setBgcData(BgcData * bdp, const int &ip);
 
   void initParameter();
   void initDimension();
@@ -143,6 +145,7 @@ private :
   bool rocklayercreated;
 
   CohortLookup * chtlu;
+  BgcData * bd[NUM_PFT];
 
   void initRockLayers();
   void initSnowSoilLayers();

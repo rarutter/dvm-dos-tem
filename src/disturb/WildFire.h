@@ -6,6 +6,8 @@
 #include <vector>
 #include <algorithm>
 
+#include "../ecodomain/Ground.h"
+
 #include "../data/CohortData.h"
 #include "../data/EnvData.h"
 #include "../data/FirData.h"
@@ -45,7 +47,7 @@ public:
   //int lookup_severity(const int yr, const int midx, const std::string& stage);
   int derive_fire_severity(const int drainage, const int day_of_burn, const int size);
 
-  void burn(int year);
+  void burn(int year, Ground &ground);
 
   std::string report_fire_inputs();
 

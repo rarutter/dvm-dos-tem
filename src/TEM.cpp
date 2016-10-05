@@ -297,7 +297,7 @@ int main(int argc, char* argv[]){
             runner.cohort.md->set_avlnflg(true);
             runner.cohort.md->set_baseline(true);
 
-            runner.cohort.md->set_dsbmodule(false);
+            runner.cohort.md->set_dsbmodule(true);
 
 
             // Check for the existence of a restart file to output to
