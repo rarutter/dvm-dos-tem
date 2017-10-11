@@ -8,11 +8,12 @@ import distutils.spawn
 import subprocess
 
 USEOMP = False
-USEMPI = False
+USEMPI = True
 
 libs = Split("""jsoncpp
                 readline
-                netcdf_c++
+                hdf5_hl
+                hdf5
                 netcdf
                 pthread
                 boost_system
@@ -96,6 +97,7 @@ platform_library_path = []
 
 # By default, attempt to find g++. Will be overwritten later if necessary.
 compiler = distutils.spawn.find_executable('g++')
+print compiler
 
 # Determine platform and modify libraries and paths accordingly
 if platform_name == 'Linux':
@@ -104,7 +106,7 @@ if platform_name == 'Linux':
                            '/usr/include/jsoncpp',
                            '~/usr/local/include']
 
-  platform_library_path = ['/usr/lib64', '~/usr/local/lib']
+  platform_library_path = ['/home/vagrant/hdf5-1.10.1/lib', '/usr/lib64', '~/usr/local/lib']
 
   compiler_flags = '-Werror -ansi -g -fPIC -DBOOST_ALL_DYN_LINK -DGNU_FPE'
   platform_libs = libs
@@ -172,6 +174,7 @@ if(USEOMP):
 # Modify setup for MPI, if necessary
 if(USEMPI):
   compiler = distutils.spawn.find_executable('mpic++')
+  print compiler
 
   # append src/parallel-code stuff to src_files and include_paths and libs
   #src_files.append(Split("""src/parallel-code/Master.cpp

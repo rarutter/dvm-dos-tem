@@ -128,6 +128,12 @@ extern src::severity_logger< severity_level > glg;
 
 int main(int argc, char* argv[]){
 
+#ifdef WITHMPI
+  //Intended for passing argc and argv, the arguments to MPI_Init
+  // are currently unnecessary.
+  MPI_Init(NULL, NULL);
+#endif
+
   // Read in and parse the command line arguments
   args->parse(argc, argv);
 	if (args->get_help()) {
@@ -284,10 +290,6 @@ int main(int argc, char* argv[]){
 
 #ifdef WITHMPI
     BOOST_LOG_SEV(glg, fatal) << "Built and running with MPI";
-
-    //Intended for passing argc and argv, the arguments to MPI_Init
-    // are currently unnecessary.
-    MPI_Init(NULL, NULL);
 
     int id = MPI::COMM_WORLD.Get_rank();
     int ntasks = MPI::COMM_WORLD.Get_size();
