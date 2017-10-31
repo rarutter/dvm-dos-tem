@@ -12,6 +12,7 @@ USEMPI = True
 
 libs = Split("""jsoncpp
                 readline
+                curl
                 hdf5_hl
                 hdf5
                 netcdf
@@ -101,14 +102,16 @@ print compiler
 
 # Determine platform and modify libraries and paths accordingly
 if platform_name == 'Linux':
-  platform_include_path = ['/usr/include',
+  platform_include_path = ['/home/UA/rarutter/downloads/hdf5-1.8.19/hdf5/include',
+                           '/home/UA/rarutter/downloads/netcdf-4.4.1.1/netcdf/include',
+                           '/usr/include',
                            '/usr/include/openmpi-x86_64',
                            '/usr/include/jsoncpp',
                            '~/usr/local/include']
 
-  platform_library_path = ['/home/vagrant/hdf5-1.10.1/lib', '/usr/lib64', '~/usr/local/lib']
+  platform_library_path = ['/home/UA/rarutter/downloads/netcdf-4.4.1.1/netcdf/lib', '/home/UA/rarutter/downloads/hdf5-1.8.19/hdf5/lib', '/usr/lib64', '~/usr/local/lib']
 
-  compiler_flags = '-Werror -ansi -g -fPIC -DBOOST_ALL_DYN_LINK -DGNU_FPE'
+  compiler_flags = '-Wno-error -ansi -g -fPIC -DBOOST_ALL_DYN_LINK -DGNU_FPE'
   platform_libs = libs
 
 
@@ -157,6 +160,7 @@ if comp_name == 'aeshna':
   platform_library_path.append('/home/tobey/usr/local/lib')
 
 if comp_name == 'atlas.snap.uaf.edu':
+  print "Atlas"
   platform_libs[:] = [lib for lib in platform_libs if not lib == 'jsoncpp']
   platform_libs.append('json_linux-gcc-4.4.7_libmt')
 
