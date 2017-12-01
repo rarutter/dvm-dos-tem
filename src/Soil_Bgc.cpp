@@ -525,16 +525,17 @@ void Soil_Bgc::initMslayerCarbon(double & minec) {
   double prevcumcarbon = 0.;
   double cumcarbon = 0.;
   double ca =  ground->soildimpar.coefminea;
-  double cb = -ground->soildimpar.coefmineb;
+  //double cb = -ground->soildimpar.coefmineb; from fengming (old version of dostem)
+  double cb = ground->soildimpar.coefmineb;
   Layer* currl = ground->fstminel;
   double totsomc = 0.0;
 
   while(currl!=NULL) {
     if(currl->isSoil) {
       dbm += currl->dz;
-      cumcarbon = ca/cb*(exp(cb*dbm*100)-1.0)*10000 + 0.0025*dbm*100*10000;
-
-      if(cumcarbon-prevcumcarbon>0.01 && dbm<=2.0) {  // somc will not exist more than 2 m intially
+      //cumcarbon = ca/cb*(exp(cb*dbm*100)-1.0)*10000 + 0.0025*dbm*100*10000; // from fengming (old version of dostem)
+      cumcarbon = ca*pow((dbm*100),cb)*10000;
+      if(cumcarbon-prevcumcarbon>0.01 && dbm<=1.0) {  // somc will not exist more than 2 m intially
         currl->rawc  = bgcpar.eqrawc * (cumcarbon -prevcumcarbon);
         currl->soma  = bgcpar.eqsoma * (cumcarbon -prevcumcarbon);
         currl->sompr = bgcpar.eqsompr * (cumcarbon -prevcumcarbon);

@@ -83,40 +83,106 @@ void Organic::DeepThickScheme(const double & totthickness) {
   }
 
   deepnum = 0;
-
+// Increased number of possible layers to improve the vertical resolution of soil column in wetlands
   if(lstshlwdz>0.0) {
-    if(deepthick < 3* lstshlwdz) {
-      deepdz[0]=deepthick;
-      deepdz[1]=MISSING_D;
-      deepdz[2]=MISSING_D;
-      deepnum =1;
-    } else if(deepthick >= 3* lstshlwdz && deepthick<6*lstshlwdz) {
-      deepdz[0]=1./3. * deepthick;
-      deepdz[1]=2./3. * deepthick;
-      deepdz[2]=MISSING_D;
-      deepnum =2;
-    } else {
-      deepdz[0]=1./6. * deepthick;
-      deepdz[1]=2./6. * deepthick;
-      deepdz[2]=3./6. * deepthick;
-      deepnum =3;
-    }
+      if(deepthick < 2* lstshlwdz) {
+        deepdz[0]=deepthick;
+        deepdz[1]=MISSING_D;
+        deepdz[2]=MISSING_D;
+        deepdz[3]=MISSING_D;
+        deepdz[4]=MISSING_D;
+        deepdz[5]=MISSING_D;
+        deepnum =1;
+      } else if(deepthick >= 2* lstshlwdz && deepthick<4*lstshlwdz) {
+        deepdz[0]=1./3. * deepthick;
+        deepdz[1]=2./3. * deepthick;
+        deepdz[2]=MISSING_D;
+        deepdz[3]=MISSING_D;
+        deepdz[4]=MISSING_D;
+        deepdz[5]=MISSING_D;
+        deepnum =2;
+      } else if(deepthick >= 4* lstshlwdz && deepthick<6*lstshlwdz) {
+        deepdz[0]=1./6. * deepthick;
+        deepdz[1]=2./6. * deepthick;
+        deepdz[2]=3./6. * deepthick;
+        deepdz[3]=MISSING_D;
+        deepdz[4]=MISSING_D;
+        deepdz[5]=MISSING_D;
+        deepnum =3;
+      } else if(deepthick >= 6* lstshlwdz && deepthick<8*lstshlwdz) {
+        deepdz[0]=1./10. * deepthick;
+        deepdz[1]=2./10. * deepthick;
+        deepdz[2]=3./10. * deepthick;
+        deepdz[3]=4./10. * deepthick;
+        deepdz[4]=MISSING_D;
+        deepdz[5]=MISSING_D;
+        deepnum =4;
+      } else if(deepthick >= 8* lstshlwdz && deepthick<10*lstshlwdz) {
+        deepdz[0]=1./15. * deepthick;
+        deepdz[1]=2./15. * deepthick;
+        deepdz[2]=3./15. * deepthick;
+        deepdz[3]=4./15. * deepthick;
+        deepdz[4]=5./15. * deepthick;
+        deepdz[5]=MISSING_D;
+        deepnum =5;
+      } else{
+        deepdz[0]=1./21. * deepthick;
+        deepdz[1]=2./21. * deepthick;
+        deepdz[2]=3./21. * deepthick;
+        deepdz[3]=4./21. * deepthick;
+        deepdz[4]=5./21. * deepthick;
+        deepdz[5]=6./21. * deepthick;
+        deepnum =6;
+      }
   } else {
     if(deepthick <= 0.02) {
       deepdz[0]=deepthick;
       deepdz[1]=MISSING_D;
       deepdz[2]=MISSING_D;
+      deepdz[3]=MISSING_D;
+      deepdz[4]=MISSING_D;
+      deepdz[5]=MISSING_D;
       deepnum =1;
     } else if(deepthick<=0.06) {
       deepdz[0]=1./3. * deepthick;
       deepdz[1]=2./3. * deepthick;
       deepdz[2]=MISSING_D;
+      deepdz[3]=MISSING_D;
+      deepdz[4]=MISSING_D;
+      deepdz[5]=MISSING_D;
       deepnum =2;
-    } else {
+    } else if(deepthick <=0.20){
       deepdz[0]=1./6. * deepthick;
       deepdz[1]=2./6. * deepthick;
       deepdz[2]=3./6. * deepthick;
+      deepdz[3]=MISSING_D;
+      deepdz[4]=MISSING_D;
+      deepdz[5]=MISSING_D;
       deepnum =3;
+    } else if(deepthick <= 0.35){
+       deepdz[0]=1./10. * deepthick;
+       deepdz[1]=2./10. * deepthick;
+       deepdz[2]=3./10. * deepthick;
+       deepdz[3]=4./10. * deepthick;
+       deepdz[4]=MISSING_D;
+       deepdz[5]=MISSING_D;
+       deepnum =4;
+    } else if(deepthick <= 0.50) {
+        deepdz[0]=1./15. * deepthick;
+        deepdz[1]=2./15. * deepthick;
+        deepdz[2]=3./15. * deepthick;
+        deepdz[3]=4./15. * deepthick;
+        deepdz[4]=5./15. * deepthick;
+        deepdz[5]=MISSING_D;
+        deepnum =5;
+    } else {
+        deepdz[0]=1./21. * deepthick;
+        deepdz[1]=2./21. * deepthick;
+        deepdz[2]=3./21. * deepthick;
+        deepdz[3]=4./21. * deepthick;
+        deepdz[4]=5./21. * deepthick;
+        deepdz[5]=6./21. * deepthick;
+        deepnum =6;
     }
   }
 };
