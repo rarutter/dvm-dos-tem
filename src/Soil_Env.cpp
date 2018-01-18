@@ -549,31 +549,39 @@ double Soil_Env::getPenMonET(const double & ta, const double& vpd,
                              const double &irad, const double &rv,
                              const double & rh) {
   double et; // out , mmH2O/m2s= kgH2o/m2s
-  double CP =1004.64 ; // specific heat capacity of dry air [J/kgK)
-  double tk = ta+273.15;
-  double pa = 101300;// pressure , Pa
-  double rho = 1.292- (0.00428 * ta); // air density  kg/m3
-  double EPS=0.6219; // ratio of mole weights
-  double SBC= 5.67e-8; //Stefan-boltzmann constant W/m2K4
-  /*resistance to raiative heat transfer through air*/
-  double rr = rho * CP /(4.0 * SBC * tk* tk*tk);
-  /* resistance to convective heat tranfer: rh*/
+  double tk = ta+273.15; //Converting C to K
+  double rho = 1.292 - (0.00428 * ta); // air density  kg/m3
+  //SHCAIR = specific heat capacity of dry air (1.00464e3 J/kgK)
+  //STFBOLTZ = Stefan-Boltzmann constant (5.67e-8 W/m2K4)
+  //PSTD = Standard pressure (101325 Pa)
+  //EPS = ratio of mole weights (0.6219)
+
+  /*resistance to radiative heat transfer through air*/
+  double rr = rho * SHCAIR /(4.0 * STFBOLTZ * tk* tk*tk);
+
+  /*resistance to convective heat tranfer: rh*/
   /*resistance to latent heat transfer rv*/
   /*combined resistance to convectie and radiative heat transfer,
-   * parallel resistances:rhr= (rh*rr)/(rh+rr)*/
+   *parallel resistances:rhr= (rh*rr)/(rh+rr)*/
   double rhr = (rh*rr)/(rh+rr);
+
   /*latent heat of vaporization as a function of ta*/
-  double lhvap = 2.5023e6 -2430.54 *ta;
-  double dt =0.2;
+  double lhvap = 2.5023e6-2430.54 * ta;
+  double dt = 0.2;
   double t1 = ta+dt;
-  double t2 =ta-dt;
+  double t2 = ta-dt;
+
   /*saturated vapor pressure at t1, t2*/
   double pvs1 = 610.7 *exp(17.38 *t1/(239.+t1));
   double pvs2 = 610.7 *exp(17.38 *t2/(239.+t2));
+
   /*slope of pvs vs. T curve at T*/
   double slope = (pvs1-pvs2)/(t1-t2);
+
   /*evapotranspiration*/
-  et = (slope*irad+ rho*CP *vpd/rhr)/((pa * CP *rv)/(lhvap*EPS *rhr)+slope);
+  et = (slope*irad + rho*SHCAIR*vpd/rhr) \
+       /((PSTD*SHCAIR*rv)/(lhvap*EPS*rhr) + slope);
+
   return et/lhvap;
 };
 

@@ -3,6 +3,7 @@
 #include <cmath>
 
 #include "CohortLookup.h"
+#include "physicalconst.h"
 #include "states.h"
 #include "fluxes.h"
 #include "diagnostics.h"

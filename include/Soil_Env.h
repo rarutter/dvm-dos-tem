@@ -10,6 +10,7 @@
 #include "FireData.h"
 #include "RestartData.h"
 
+#include "physicalconst.h"
 #include "errorcode.h"
 #include "parameters.h"
 #include "layerconst.h"
