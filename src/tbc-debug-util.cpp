@@ -12,6 +12,8 @@
 #include <mpi.h>
 #endif
 
+#include <stdio.h>
+
 #include "../include/tbc-debug-util.h"
 
 #ifdef WITHMPI
