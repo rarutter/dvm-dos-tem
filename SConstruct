@@ -157,12 +157,16 @@ if comp_name == 'chinook00':
   platform_libs[:] = [lib for lib in platform_libs if not lib == 'jsoncpp']
   platform_libs.append('json_linux-gcc-4.4.7_libmt')
 
-
+  platform_include_path.insert(0, homedir + '/custom_software/openmpi-3.0.0/include')
   platform_include_path.insert(0, homedir + '/custom_software/jsoncpp/include')
   platform_include_path.insert(0, homedir + '/custom_software/boost_1_55_0/include')
+  platform_include_path.insert(0, homedir + '/custom_software/netcdf-4.4.1.1/netcdf/include')
 
   platform_library_path.insert(0, homedir + '/custom_software/jsoncpp/libs/linux-gcc-4.4.7')
   platform_library_path.insert(0, homedir + '/custom_software/boost_1_55_0/lib')
+  platform_library_path.insert(0, homedir + '/custom_software/hdf5-1.8.19/hdf5/lib')
+  platform_library_path.insert(0, homedir + '/custom_software/netcdf-4.4.1.1/netcdf/lib')
+  platform_library_path.insert(0, homedir + '/custom_software/openmpi-3.0.0/lib')
 
 
 if comp_name == 'atlas.snap.uaf.edu':
@@ -185,7 +189,7 @@ if(USEOMP):
 
 # Modify setup for MPI, if necessary
 if(USEMPI):
-  compiler = distutils.spawn.find_executable('mpic++')
+  compiler = distutils.spawn.find_executable('mpicc')
   print compiler
 
   # append src/parallel-code stuff to src_files and include_paths and libs
@@ -193,8 +197,9 @@ if(USEMPI):
 
   compiler_flags = compiler_flags + ' -m64 -DWITHMPI'
 
-  libs.append(Split("""mpi_cxx
-                       mpi"""))
+#  libs.append(Split("""mpi_cxx
+#                       mpi"""))
+  libs.append("mpi")
 
 
 #VariantDir('scons_obj','src', duplicate=0)
