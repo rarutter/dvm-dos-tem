@@ -5,9 +5,23 @@
 # -DGNU_FPE for various Linux
 
 CC=g++
-CFLAGS=-c -ansi -g -gdwarf-2 -std=c++11 -fPIC -DBOOST_ALL_DYN_LINK -Werror # -W -Wall -Werror -Wno-system-headers
+CFLAGS=-c -ansi -g -gdwarf-2 -fPIC -DBOOST_ALL_DYN_LINK -Werror # -W -Wall -Werror -Wno-system-headers
 LIBS=-lnetcdf -lboost_system -lboost_filesystem \
 -lboost_program_options -lboost_thread -lboost_log -ljsoncpp -lpthread -lreadline
+
+# This should probably be handled by using more of the build toolchain
+# instead of this.
+C++0X := $(shell GCC_VERSION=$$(gcc -dumpversion); \
+  [[ $$GCC_VERSION < 4.7 ]]; \
+  echo $$? )
+
+ifeq (${C++0X}, 0)
+  $(info gcc version < 4.7. Using -std=c++0x)
+  CFLAGS += -std=c++0x
+else
+  $(info gcc version > 4.7. Using -std=c++11)
+  CFLAGS += -std=c++11
+endif
 
 USEMPI = false
 USEOMP = false
