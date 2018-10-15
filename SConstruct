@@ -8,7 +8,7 @@ import distutils.spawn
 import subprocess
 
 USEOMP = False
-USEMPI = False
+USEMPI = True
 
 libs = Split("""jsoncpp
                 readline
@@ -104,7 +104,7 @@ if platform_name == 'Linux':
 
   platform_library_path = ['/u1/uaf/rarutter/custom_software/boost_1_55_0/lib', '/home/vagrant/netcdf-4.4.1.1/netcdf/lib', '/home/vagrant/hdf5-1.8.19/hdf5/lib', '/home/UA/rarutter/downloads/netcdf-4.4.1.1/netcdf/lib', '/home/UA/rarutter/downloads/hdf5-1.8.19/hdf5/lib', '/usr/lib64', '~/usr/local/lib']
 
-  compiler_flags = '-Wno-error -ansi -g -fPIC -DBOOST_ALL_DYN_LINK -DGNU_FPE'
+  compiler_flags = '-Wno-error -ansi -g -fPIC -std=c++0x -DBOOST_ALL_DYN_LINK -DBOOST_NO_CXX11_SCOPED_ENUMS -DGNU_FPE'
   platform_libs = libs
 
 
@@ -153,7 +153,7 @@ if comp_name == 'aeshna':
   platform_library_path.append('/home/tobey/usr/local/lib')
 
 
-if comp_name == 'chinook00':
+if comp_name == 'chinook00.rcs.alaska.edu':
   platform_libs[:] = [lib for lib in platform_libs if not lib == 'jsoncpp']
   platform_libs.append('json_linux-gcc-4.4.7_libmt')
 
@@ -167,7 +167,10 @@ if comp_name == 'chinook00':
   platform_library_path.insert(0, homedir + '/custom_software/hdf5-1.8.19/hdf5/lib')
   platform_library_path.insert(0, homedir + '/custom_software/netcdf-4.4.1.1/netcdf/lib')
   platform_library_path.insert(0, homedir + '/custom_software/openmpi-3.0.0/lib')
-
+#if c++11 found, remove it. Either way, add c++0x
+#compiler_flags
+#-std=c++11
+#-std=c++0x
 
 if comp_name == 'atlas.snap.uaf.edu':
   platform_libs[:] = [lib for lib in platform_libs if not lib == 'jsoncpp']
