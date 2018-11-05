@@ -25,6 +25,7 @@ ulimit -l unlimited
 . /etc/profile.d/modules.sh
 module purge
 module load slurm
+source env-setup-scripts/setup-env-for-chinook.sh
 
 echo $SLURM_JOB_NODELIST
 

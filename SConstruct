@@ -153,7 +153,9 @@ if comp_name == 'aeshna':
   platform_library_path.append('/home/tobey/usr/local/lib')
 
 
-if comp_name == 'chinook00':
+if 'chinook' in comp_name:
+  compiler_flags = compiler_flags.replace('c++11', 'c++0x')
+
   platform_libs[:] = [lib for lib in platform_libs if not lib == 'jsoncpp']
   platform_libs.append('json_linux-gcc-4.4.7_libmt')
 
