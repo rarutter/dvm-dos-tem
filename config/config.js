@@ -17,7 +17,7 @@
     "hist_exp_fire_file": "DATA/cru-ts40_ar5_rcp85_mri-cgcm3_Toolik_50x50/historic-explicit-fire.nc",
     "proj_exp_fire_file": "DATA/cru-ts40_ar5_rcp85_mri-cgcm3_Toolik_50x50/projected-explicit-fire.nc",
     "topo_file":          "DATA/cru-ts40_ar5_rcp85_mri-cgcm3_Toolik_50x50/topo.nc",
-    "output_dir":         "/center1/AKINTMDL/rarutter/Toolik_50x50_prodrun_20181105_0/",
+    "output_dir":         "/center1/AKINTMDL/rarutter/Toolik_50x50_prodrun_20181107_1/",
     "output_spec_file":   "config/output_spec_production.csv",
     "output_monthly":     0, //JSON specific
     "output_nc_eq":       0,
