@@ -274,6 +274,9 @@ int main(int argc, char* argv[]){
   BOOST_LOG_SEV(glg, info) << "Creating empty run status file.";
   create_empty_run_status_file(run_status_fname, num_rows, num_cols);
 
+  //Record run settings
+  BOOST_LOG_SEV(glg, note) << "Writing config settings to output directory for records";
+  temutil::record_config_settings(controldata, modeldata.output_dir);
 
   // Create empty output files now so that later, as the program
   // proceeds, there is somewhere to append output data...

@@ -112,6 +112,7 @@ namespace temutil {
   std::string file2string(const char *filename);
 
   Json::Value parse_control_file(const std::string &filepath);
+  void record_config_settings(Json::Value control_settings, const std::string &output_dir);
 
   std::vector< std::vector<int> > read_run_mask(const std::string &filename);
 

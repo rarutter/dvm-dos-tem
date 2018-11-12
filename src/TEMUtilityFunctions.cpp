@@ -15,6 +15,7 @@
 
 #include <json/reader.h>
 #include <json/value.h>
+#include <json/writer.h> //this is necessary for output, despite not being explicitly used
 
 #include "../include/physicalconst.h" // for PI
 #include "../include/timeconst.h" // for mapping from first day of month -> day of year
@@ -207,7 +208,7 @@ namespace temutil {
     throw(errno);
   }
 
-  /** Reads a json foramtted "control file", returning a json data object.
+  /** Reads a json formatted "control file", returning a json data object.
   */
   Json::Value parse_control_file(const std::string &filepath) {
 
@@ -239,6 +240,21 @@ namespace temutil {
     }
 
     return root;
+  }
+
+  /** Regurgitates the loaded config settings to more thoroughly label
+ * output sets.
+ */
+  void record_config_settings(Json::Value control_settings, const std::string &output_dir){
+
+    std::string record_config_file = output_dir + "/record_config.js";
+    BOOST_LOG_SEV(glg, debug) << "Writing config record file: " << record_config_file;
+
+    std::ofstream out_stream;
+    out_stream.open(record_config_file.c_str(), std::ofstream::out);
+    out_stream << control_settings << std::endl;
+    out_stream.close();
+    BOOST_LOG_SEV(glg, debug) << "Recording config settings complete.";
   }
 
   /** rough draft for reading a run-mask (2D vector of ints)
