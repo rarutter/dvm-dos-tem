@@ -678,9 +678,10 @@ double Soil_Env::getWaterTable(Layer* lstsoill) {
 double Soil_Env::getRunoff(Layer* toplayer, Layer* drainl,
                            const double & rnth,const double & melt) {
   double runoff = 0.; // overland runoff
-  double s, dz, por;
-  double  thetai;
-  double  thetal;
+  //double s, dz, por;
+  double s;
+  double thetai;
+  double thetal;
   double frasat = 0.;
   double sums=0.;
   double ztot=0.;
@@ -691,16 +692,16 @@ double Soil_Env::getRunoff(Layer* toplayer, Layer* drainl,
     runoff = rnth+melt;
   } else {
     while (currl!=NULL) {
-      por = currl->poro;
-      dz = currl->dz;
+      //por = currl->poro;
+      //dz = currl->dz;
       thetai = currl->getVolIce();
       thetal = currl->getVolLiq();
-      s = (thetai + thetal)/por;
+      s = (thetai + thetal) / currl->poro;
       s = fmin((double)s , 1.0);
-      sums+=s * dz;
-      ztot +=dz;
-      frasat +=s;
-      currl=currl->nextl;
+      sums += s * currl->dz;
+      ztot += currl->dz;
+      frasat += s;
+      currl = currl->nextl;
       numl++;
 
       if(numl>=drainl->solind) {
