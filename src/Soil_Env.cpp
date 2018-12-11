@@ -708,10 +708,15 @@ double Soil_Env::getRunoff(Layer* toplayer, Layer* drainl,
       }
     }
 
-    double avgs = sums/ztot;
-    frasat /=numl;
+    //proportion of the (thawed?) stack occupied by ice and water 
+    double avgs = sums / ztot;
+    //average proportion of porosity occupied by ice and water
+    frasat /= numl;
+
+    //This equation is similar to CLM3, Oleson 2004.
+    //However, the above calculation of frasat does not match.
     runoff = (frasat  + (1.-frasat)*pow((double)avgs, 4.) )
-             * (rnth +melt); //So, unit same as "rainfall/snowmelt)"
+             * (rnth +melt); //So, unit same as "rainfall/snowmelt"
   }
 
   return runoff;

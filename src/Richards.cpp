@@ -176,7 +176,7 @@ void Richards::update(Layer *fstsoill, Layer* bdrainl,
   }
 };
 
-// this will generate a conintuous unfrozen column for soil water update
+// this will generate a continuous unfrozen column for soil water update
 void Richards::prepareSoilNodes(Layer* currsoill, const double & draindepth) {
   // it is assumed that all layers in Richards will be unfrozen,
   // i.e., from unfrozen 'topsoill' to ''drainl'
@@ -414,7 +414,7 @@ int Richards::updateOneIteration(const double &fbaseflow) {
     }
   }
 
-  // preparing matrice for solution
+  // preparing matrix for solution
   double den, num;
   double dqodw1, dqodw2, dqidw0, dqidw1;
   double sdamp =0.;
