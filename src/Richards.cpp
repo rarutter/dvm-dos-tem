@@ -78,11 +78,13 @@ void Richards::update(Layer *fstsoill, Layer* bdrainl,
   indx0sl = currl->solind;
   Layer* topsoill = currl;
 
+  prepareSoilNodes(topsoill, bdraindepth);
+
   while ( (currl != NULL) && (currl->solind <= drainl->solind) ) {
     // prepare arrays for calling Richards Equation's solver
     // for one continuous section of unfrozen soil column:
     // 'soilind' from indx0al:indx0al+numal
-    prepareSoilNodes(currl, bdraindepth);
+    //prepareSoilNodes(currl, bdraindepth);
 
     //
     if (numal == 1) {// one layer: no need to iterate, tip-bucket approach enough
