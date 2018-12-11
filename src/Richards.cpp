@@ -217,9 +217,34 @@ void Richards::prepareSoilNodes(Layer* currsoill, const double & draindepth) {
         double minvolliq = currl->minliq/DENLIQ/currl->dz;
         effporo[ind] = fmax(0., currl->poro-minvolliq);
         dzmm[ind] = currl->dz*1.e3*fmin(frntdzadj, drdzadj);
-        zmm[ind]  = (currl->z+frntzadj)*1.e3 + 0.5 *dzmm[ind]; // the node depth (middle point of a layer)
+
+        bool thawing = false;
+        if(currl->prevl == NULL){
+          if(currl->nextl->frozen==1){
+            thawing = true;
+          }
+          else{
+            thawing = false;
+          }
+        }
+        else{
+          if(currl->prevl->frozen <= 0){
+            thawing = true;
+          }
+          else{
+            thawing = false;
+          }
+        }
+
+        if(thawing){
+          zmm[ind] = ((currl->z+currl->dz) - frntzadj)*1.e3 - 0.5*dzmm[ind];
+        }
+        else{
+          zmm[ind]  = (currl->z+frntzadj)*1.e3 + 0.5 *dzmm[ind]; // the node depth (middle point of a layer)
+        }
         effminliq[ind] = currl->minliq*fmin(frntdzadj, drdzadj);
-        effmaxliq[ind] = (effporo[ind]*dzmm[ind])*fmin(frntdzadj, drdzadj);
+        effmaxliq[ind] = (effporo[ind]*dzmm[ind]);
+        //effmaxliq[ind] = (effporo[ind]*dzmm[ind])*fmin(frntdzadj, drdzadj);
         effliq[ind] = fmax(0.0, currl->liq*drdzadj-effminliq[ind]);
 
         if (effliq[ind]<0. || effminliq[ind]<0. || effmaxliq[ind]<0.) {
