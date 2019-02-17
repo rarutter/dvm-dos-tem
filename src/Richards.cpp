@@ -3,6 +3,9 @@
 #include "../include/TEMLogger.h"
 extern src::severity_logger< severity_level > glg;
 
+#include "../../eigen-eigen-323c052e1731/Eigen/Core"
+#include "../../eigen-eigen-323c052e1731/Eigen/IterativeLinearSolvers"
+
 Richards::Richards() {
   //TSTEPMIN = 1.e-5;      //
   //TSTEPMAX = 0.2;
@@ -482,7 +485,46 @@ void Richards::update(Layer *fstsoill, Layer* bdrainl,
   // water solver.
   if(numal > 1){
     cn.tridiagonal(indx0al, numal, coeffA, coeffB, coeffC, coeffR, deltathetaliq);//water solver
-  
+
+    int matrix_dim = MAX_SOI_LAY+1;
+    Eigen::VectorXd x(matrix_dim), b(matrix_dim);
+    Eigen::SparseMatrix<double> A(matrix_dim,matrix_dim);
+
+    //copy data into A and b
+    for(int ii=0; ii<matrix_dim; ii++){
+      b[ii] = coeffR[ii];
+
+      //A should be row-major
+      //[row][col]
+      for(int jj=0; jj<matrix_dim; jj++){
+        if(ii==jj){
+          A.insert(ii,jj) = coeffA[ii];
+        }
+        if(ii+1==jj){
+          A.insert(ii,jj) = coeffB[ii];
+        }
+        if(ii==jj+1){
+          A.insert(ii,jj) = coeffC[jj];
+        }
+      }
+    }
+
+    Eigen::BiCGSTAB<Eigen::SparseMatrix<double> > solver;
+    solver.compute(A);
+    x = solver.solve(b);
+
+    int temporary_iterations_holder = solver.iterations();
+    double temporary_error_holder = solver.error();
+
+    //copy data back out
+    for(int ii=0; ii<matrix_dim-2; ii++){
+      deltathetaliq[ii+2] = x[ii];
+    }
+ 
+
+    //cn.geBackward(stardind, endind, tii, dx, cn, cap, s, e, dt);
+    //cn.cnForward(startind, endind, tii, tit, s, e);
+ 
     //A NaN check for debugging purposes
     for(int ii=0; ii<MAX_SOI_LAY; ii++){
       if(deltathetaliq[ii] != deltathetaliq[ii]){
