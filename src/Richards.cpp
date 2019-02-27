@@ -1,7 +1,13 @@
+
+
 #include "../include/Richards.h"
 
 #include "../include/TEMLogger.h"
 extern src::severity_logger< severity_level > glg;
+
+//lapacke must be included after TEMLogger, to avoid BOOST-related
+// build errors
+#include <lapacke/lapacke.h>
 
 Richards::Richards() {
   //TSTEPMIN = 1.e-5;      //
@@ -477,8 +483,46 @@ void Richards::update(Layer *fstsoill, Layer* bdrainl,
   //If there are more than one active layers, we use the Crank Nicholson
   // water solver.
   if(numal > 1){
-    cn.tridiagonal(indx0al, numal, coeffA, coeffB, coeffC, coeffR, deltathetaliq);//water solver
-  
+//    cn.tridiagonal(indx0al, numal, coeffA, coeffB, coeffC, coeffR, deltathetaliq);//water solver
+
+
+    //copy values into arrays so no blank indices
+    double sub_diagonal[numal-1];
+    double diagonal[numal];
+    double super_diagonal[numal-1];
+    double result[numal];
+
+    for(int ii=0; ii<numal; ii++){
+      diagonal[ii] = coeffB[ii-indx0al];
+      result[ii] = coeffR[ii-indx0al];
+    }
+    for(int ii=0; ii<numal-1; ii++){
+      sub_diagonal[ii] = coeffA[ii-indx0al];
+      super_diagonal[ii] = coeffC[ii-indx0al];
+    }
+
+    //int number of state variables (layers)
+    //int number of columns in matrix B (1)
+    //sub-diagonal elements of A
+    //diagonal elements of A
+    //super-diagonal elements of A
+    //RHS vector (coeffR)
+    //int nlayers - the leading dimension of matrix rhs?
+    //integer err
+    lapack_int lapacke_err, num_things, nrhs;
+    num_things = numal;
+    nrhs = 1;
+    LAPACKE_dgtsv(LAPACK_ROW_MAJOR, numal, 1, sub_diagonal, diagonal, super_diagonal, result, lapacke_err);
+//    LAPACKE_dgtsv(numal, 1, sub_diagonal, diagonal, super_diagonal, result, LAPACK_ROW_MAJOR, err); 
+
+//    tridiagonal_solver(bounds, lbj, ubj, jtop, numf, filter, a, b, c, r, u);
+
+    //copy values from result into deltathetaliq
+    for(int ii=0; ii<numal; ii++){
+      deltathetaliq[ii+indx0al] = result[ii];
+    }
+
+ 
     //A NaN check for debugging purposes
     for(int ii=0; ii<MAX_SOI_LAY; ii++){
       if(deltathetaliq[ii] != deltathetaliq[ii]){
@@ -650,6 +694,97 @@ void Richards::update(Layer *fstsoill, Layer* bdrainl,
   }
 
 };
+
+/*
+tridiagonal(bounds, 1, nlevsoi+1, jtop(bounds.begc:bounds.endc, num_hydrologyc, filter_hydrologyc, amx, bmx, cmx, rmx, dwat2))
+void Richards::tridiagonal_solver(bounds, lbj, ubj, jtop, numf, filter, a, b, c, r, u){
+  //bounds = incoming bounds type, begc and endc are beginning and ending column index 
+  //lbj = lbinning level index
+  //ubj = ubing level index
+  //jtop = top level for each column, integer array jtop(bounds.begc:bounds.endc). Default value = 1, then passed in to Tridiagonal
+  //numf = filter dimension, incoming num_hydrologyc (number of column soil points in column filter)
+  //filter = filter, incoming filter_hydrologyc(:) (column filter for soil points). Defined as input to HydrologyNoDrainage as integer array of unknown size.
+  //a = left off diagonal of tridiagonal matrix
+  //b = diagonal column of ...
+  //c = right off diagonal ...
+  //r = forcing term of tridiagonal matrix
+  //u = solution
+
+  //j, ci, fc are integer indices
+  //gam(bounds.begc:bounds.endc, lbj:ubj)
+  //bet(bounds.begc:bounds.endc)
+
+  double gam[][]; //what is gam?
+  double bet[]; //what is bet?
+
+  for(int fc=1; fc<=numf; fc++){
+    int ci = filter(fc);
+    bet[ci] = b(ci, jtop(ci));//jtop is most likely 1 for any column
+  }
+
+  for(int j=lbj; j<=ubj; j++){
+    for(int fc=1, fc<=numf; fc++){
+
+      ci = filter(fc);
+
+      if((col%itype(ci) == icol_sunwall || col%itype(ci) == icol_shadewall & || col%itype(ci) == icol_roof) && j <= nlevurb){
+        if(j >= jtop(ci)){
+          if(j == jtop(ci)){
+            u(ci,j) = r(ci,j) / bet(ci);
+          }
+          else{
+            gam(ci, j) = c(ci,j-1) / bet(ci);
+            bet(ci) = b(ci,j) - a(ci,j) * gam(ci,j);
+            u(ci,j) = (r(ci,j) - a(ci,j)*u(ci,j-1)) / bet(ci);
+          }
+        }
+      }
+      else if(col%itype(ci) /= icol_sunwall && col%itype(ci) /= icol_shadewall & && col%itype(ci) /= icol_roof){
+
+        if(j >= jtop(ci)){
+
+          if(j == jtop(ci)){
+            u(ci,j) = r(ci,j) / bet(ci);
+          }
+          else{
+            gam(ci,j) = c(ci,j-1) / bet(ci);
+            bet(ci) = b(ci,j) - a(ci,j) * gam(ci,j);
+            u(ci,j) = (r(ci,j) - a(ci,j)*u(ci,j-1)) / bet(ci)
+          }
+
+        }
+
+      }
+    }
+  }
+
+  //CHECK CONDITIONS - TODO
+  for(int j=ubj-1; j<=lbj; j--){
+
+    for(int fc=1; fc<=numf; fc++){
+      ci = filter(fc);
+
+      if((col%itype(ci) == icol_sunwall || col%itype(ci) == icol_shadewall & || col%itype(ci) == icol_roof) && j <= nlevurb-1){
+
+        if(j >= jtop(ci)){
+          u(ci,j) = u(ci,j) - gam(ci,j+1) * u(ci,j+1);
+        }
+
+      }
+      else if(col%itype(ci) /= icol_sunwall && col%itype(ci) /= icol+shadewall & && col%itype(ci) /= icol_roof){
+
+        if(j >= jtop(ci)){
+          u(ci,j) = u(ci,j) - gam(ci,j+1) * u(ci,j+1);
+        }
+
+      }
+    }
+
+  }
+
+}
+*/
+
 
 //This works on the continuous unfrozen column
 //This collects already-known values into arrays for ease of use, and
