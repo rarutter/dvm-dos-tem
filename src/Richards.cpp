@@ -373,12 +373,8 @@ void Richards::update(Layer *fstsoill, Layer* bdrainl,
       //deltaq_iminus1 / deltatheta_liq_iminus1
       eq7117[ind] = - ( (k[ind-1]/(nodemm[ind]-nodemm[ind-1])) * eq7121[ind] )
                     - eq7124[ind] 
-                    * ( psi[ind-1] - psi[ind] + psiE[ind] - psiE[ind-1]
-                        /(nodemm[ind] - nodemm[ind-1]) );
-      //CLM5 Equation 7.76
-      eq7117[ind] = - ( (k[ind-1]/(nodemm[ind]-nodemm[ind-1])) * eq7121[ind] )
-                    - eq7124[ind] 
-                    * ( psi[ind-1] - psi[ind] + nodemm[ind] - nodemm[ind-1]
+                    * ( (psi[ind-1] - psi[ind] + nodemm[ind]
+                         - nodemm[ind-1])
                         /(nodemm[ind] - nodemm[ind-1]) );
 
 
@@ -391,7 +387,7 @@ void Richards::update(Layer *fstsoill, Layer* bdrainl,
       //CLM5 Equation 7.77
       eq7118[ind] = ( (k[ind-1]/(nodemm[ind]-nodemm[ind-1])) * eq7122[ind] )
                   - eq7124[ind] 
-                  * ( psi[ind-1] - psi[ind] + nodemm[ind] - nodemm[ind-1]
+                  * ( (psi[ind-1] - psi[ind] + nodemm[ind] - nodemm[ind-1])
                       /(nodemm[ind] - nodemm[ind-1]) );
 
 
@@ -404,7 +400,7 @@ void Richards::update(Layer *fstsoill, Layer* bdrainl,
       //CLM5 Equation 7.78
       eq7119[ind] = - ( (k[ind]/(nodemm[ind+1] - nodemm[ind])) * eq7122[ind] )
                     - eq7125[ind] 
-                    * ( psi[ind] - psi[ind+1] + nodemm[ind+1] - nodemm[ind]
+                    * ( (psi[ind] - psi[ind+1] + nodemm[ind+1] - nodemm[ind])
                         /(nodemm[ind+1] - nodemm[ind]) );
 
 
@@ -418,7 +414,7 @@ void Richards::update(Layer *fstsoill, Layer* bdrainl,
       //CLM5 Equation 7.79
       eq7120[ind] = (k[ind]/(nodemm[ind+1] - nodemm[ind])) * eq7123[ind]
                   - eq7125[ind]  
-                  * ( psi[ind] - psi[ind+1] + nodemm[ind+1] - nodemm[ind]
+                  * ( (psi[ind] - psi[ind+1] + nodemm[ind+1] - nodemm[ind])
                       /(nodemm[ind+1] - nodemm[ind]) );
 
 
