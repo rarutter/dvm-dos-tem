@@ -1,5 +1,5 @@
 /*! \file
- * 
+ *
  */
 #ifndef PEATLAYER_H_
 #define PEATLAYER_H_
@@ -11,17 +11,17 @@
 using namespace std;
 
 class PeatLayer: public SoilLayer {
- public:
+public:
 
- 	PeatLayer(const double & pdz, const int & upper);
+  PeatLayer(const double & pdz, const int & upper);
 
-    bool isFibric;
-    bool isHumic;
-    void humify();
-    void fireConvert(SoilLayer* sl);
-    virtual bool isMoss();
-    virtual bool isMineral();
- 	virtual bool isPeat();
-    
+  bool isFibric;
+  bool isHumic;
+  void humify();
+  void fireConvert(SoilLayer* sl);
+  virtual bool isMoss();
+  virtual bool isMineral();
+  virtual bool isPeat();
+
 };
 #endif /*PEATLAYER_H_*/
