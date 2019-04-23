@@ -1,13 +1,20 @@
 /*! \file
  *
  */
-#include "PeatLayer.h"
+#include "../include/PeatLayer.h"
 
 PeatLayer::PeatLayer(const double & pdz, const int & upper) {
   tkey=I_PEAT;
   dz = pdz;
-  isFibric =false;
-  isHumic  =false;
+
+  isFibric = false;
+  isHumic  = false;
+  isMineral = false;
+  isMoss = false;
+  isOrganic = true;
+  isRock = false;
+  isSnow = false;
+
   fromFire =false;
 // these properties will not change upon fire disturbance
 // it is assumed that when fire occurs, the left moss will
@@ -53,7 +60,7 @@ PeatLayer::PeatLayer(const double & pdz, const int & upper) {
 
   //whenever poro is changed, deriveProperty need to be called again
   //tcmin =0.01;
-  deriveProperty();
+  derivePhysicalProperty();
 };
 
 void PeatLayer::humify() {
@@ -71,18 +78,6 @@ void PeatLayer::humify() {
   hksat = 0.02;//0.1;//0.28; //mm/s
   //tcmin =0.1;//0.10;
   //psisat =-10.1;
-  deriveProperty();
+  derivePhysicalProperty();
 };
 
-
-
-bool PeatLayer::isMoss() {
-  return false;
-}
-
-bool PeatLayer::isMineral() {
-  return false;
-}
-bool PeatLayer::isPeat() {
-  return true;
-}
