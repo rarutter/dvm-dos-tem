@@ -6,7 +6,7 @@
 # 2018
 
 
-OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/50x50_batch"
+OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/Toolik_50x50_ncarprodrun_20181204_0"
 OUTPUT_SPEC_PATH="./config/output_spec_production.csv"
 STAGES="eq sp tr sc"
 TIMESTEPS="daily monthly yearly"
@@ -15,8 +15,16 @@ FINAL_DIR="${OUTPUT_DIR_PREFIX}/all-merged"
 
 mkdir -p "${OUTPUT_DIR_PREFIX}/all-merged"
 
+variables=$(cat $OUTPUT_SPEC_PATH | cut -d, -f1)
+
+#If merging files for a single variable
+if [ $# != 0 ] ; then
+  echo "single variable: $1"
+  variables=$1
+fi
+
 # First handle all the normal outputs.
-for variable in $(cat $OUTPUT_SPEC_PATH | cut -d, -f1)
+for variable in $variables 
 do
   echo "Processing variable: $variable"
   if [ $variable != 'Name' ] ; then   # ignore the header
