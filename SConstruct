@@ -23,7 +23,10 @@ libs = Split("""jsoncpp
                 boost_thread
                 boost_mpi
                 boost_serialization
-                boost_log""")
+                boost_log
+                lapacke
+                lapack
+                gfortran""")
 
 local_include_paths = ['./include']
                                                             
