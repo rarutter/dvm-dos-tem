@@ -21,7 +21,7 @@
     "output_spec_file":   "config/output_spec_N_cycle.csv",
     "output_monthly":     1, //JSON specific
     "output_nc_eq":       0,
-    "output_nc_sp":       1,
+    "output_nc_sp":       0,
     "output_nc_tr":       1,
     "output_nc_sc":       1 
   },

@@ -594,7 +594,7 @@ void advance_model(const int rowidx, const int colidx,
     runner.cohort.md->set_envmodule(true);
     runner.cohort.md->set_dynamic_lai_module(true);
     runner.cohort.md->set_bgcmodule(true);
-    runner.cohort.md->set_dslmodule(true);
+    runner.cohort.md->set_dslmodule(false);
 
     runner.cohort.md->set_nfeed(true);
     runner.cohort.md->set_avlnflg(true);
@@ -664,7 +664,7 @@ void advance_model(const int rowidx, const int colidx,
     runner.cohort.md->set_avlnflg(true);
     runner.cohort.md->set_baseline(true);
     runner.cohort.md->set_dsbmodule(false);
-    runner.cohort.md->set_dslmodule(true);
+    runner.cohort.md->set_dslmodule(false);
     runner.cohort.md->set_dynamic_lai_module(true);
 
     runner.cohort.climate.monthlycontainers2log();
@@ -718,7 +718,7 @@ void advance_model(const int rowidx, const int colidx,
     runner.cohort.md->set_avlnflg(true);
     runner.cohort.md->set_baseline(true);
     runner.cohort.md->set_dsbmodule(false);
-    runner.cohort.md->set_dslmodule(true);
+    runner.cohort.md->set_dslmodule(false);
     runner.cohort.md->set_dynamic_lai_module(true);
 
     // update the cohort's restart data object
@@ -768,7 +768,7 @@ void advance_model(const int rowidx, const int colidx,
     runner.cohort.md->set_avlnflg(true);
     runner.cohort.md->set_baseline(true);
     runner.cohort.md->set_dsbmodule(false);
-    runner.cohort.md->set_dslmodule(true);
+    runner.cohort.md->set_dslmodule(false);
     runner.cohort.md->set_dynamic_lai_module(true);
 
     // update the cohort's restart data object
