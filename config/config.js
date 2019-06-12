@@ -18,7 +18,7 @@
     "proj_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_mri-cgcm3_Toolik_10x10/projected-explicit-fire.nc",
     "topo_file":          "demo-data/cru-ts40_ar5_rcp85_mri-cgcm3_Toolik_10x10/topo.nc",
     "output_dir":         "output/",
-    "output_spec_file":   "config/output_spec.csv",
+    "output_spec_file":   "config/output_spec_N_cycle.csv",
     "output_monthly":     1, //JSON specific
     "output_nc_eq":       0,
     "output_nc_sp":       1,
