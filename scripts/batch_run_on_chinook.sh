@@ -18,7 +18,7 @@ echo "Working on batch directory: $1"
 
 for index in $(eval echo {$2..$3}); do
   #echo "$index"
-  while [ $(squeue | grep -c rarutter) -ge 20 ];
+  while [ $(squeue | grep -c rarutter) -ge 15 ];
   do
     sleep 30
   done

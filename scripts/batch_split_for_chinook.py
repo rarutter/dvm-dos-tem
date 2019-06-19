@@ -62,6 +62,7 @@ BASE_OUTDIR = j['IO']['output_dir']
 # This is somewhat restricted by how cells are assigned to processes.
 with nc.Dataset(BASE_RUNMASK, 'r') as runmask:
   TOTAL_CELLS_TO_RUN = np.count_nonzero(runmask.variables['run'])  
+  print "Total cells to run: {}".format(TOTAL_CELLS_TO_RUN)
   runmasklist = runmask.variables["run"][:,:].flatten()
   runmaskreversed = runmasklist[::-1]
   last_cell_index = len(runmaskreversed) - np.argmax(runmaskreversed) - 1
@@ -141,7 +142,7 @@ for i, cell in enumerate(coord_list):
 # SUMMARIZE
 #
 number_batches = batch
-assert (nbatches == number_batches), "PROBLEM: Something is wrong with the batch numbers."
+assert (nbatches == number_batches), "PROBLEM: Something is wrong with the batch numbers: {} vs {}".format(nbatches, number_batches)
 print "Split cells into {} batches...".format(number_batches)
 
 #
@@ -185,7 +186,7 @@ for batch in range(0, number_batches):
   #SBATCH --time=2:00:00
 
   # Partition specification
-  #SBATCH -p t2standard 
+  #SBATCH -p t1standard 
 
   # Number of MPI tasks
   #SBATCH -n {1}

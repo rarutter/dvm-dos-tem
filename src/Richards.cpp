@@ -2,7 +2,7 @@
 
 #include "../include/TEMLogger.h"
 extern src::severity_logger< severity_level > glg;
-#include "lapacke/lapacke.h"
+#include "lapacke.h"
 
 Richards::Richards() {
   delta_t = SEC_IN_DAY;//Total time to incorporate; set to SEC_IN_DAY for no iteration

@@ -8,7 +8,7 @@ import distutils.spawn
 import subprocess
 
 USEOMP = False
-USEMPI = False
+USEMPI = True 
 
 libs = Split("""jsoncpp
                 readline
@@ -166,12 +166,14 @@ if 'chinook' in comp_name:
   platform_include_path.insert(0, homedir + '/custom_software/jsoncpp/include')
   platform_include_path.insert(0, homedir + '/custom_software/boost_1_55_0/include')
   platform_include_path.insert(0, homedir + '/custom_software/netcdf-4.4.1.1/netcdf/include')
+  platform_include_path.insert(0, homedir + '/custom_software/lapack-3.8.0/LAPACKE/include')
 
   platform_library_path.insert(0, homedir + '/custom_software/jsoncpp/libs/linux-gcc-4.4.7')
   platform_library_path.insert(0, homedir + '/custom_software/boost_1_55_0/lib')
   platform_library_path.insert(0, homedir + '/custom_software/hdf5-1.8.19/hdf5/lib')
   platform_library_path.insert(0, homedir + '/custom_software/netcdf-4.4.1.1/netcdf/lib')
   platform_library_path.insert(0, homedir + '/custom_software/openmpi-3.0.0/lib')
+  platform_library_path.insert(0, homedir + '/custom_software/lapack-3.8.0')
 
 
 if comp_name == 'atlas.snap.uaf.edu':
