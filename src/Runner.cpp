@@ -914,14 +914,25 @@ void Runner::output_nc_3dim(OutputSpec* out_spec, std::string stage_suffix,
   std::string output_filename = out_spec->file_path + out_spec->filename_prefix + stage_suffix;
 
 #ifdef WITHMPI
-  temutil::nc( nc_open_par(output_filename.c_str(), NC_WRITE|NC_MPIIO, MPI_COMM_SELF, MPI_INFO_NULL, &ncid) );
-  temutil::nc( nc_var_par_access(ncid, cv, NC_INDEPENDENT) );
+  int err = nc_open_par(output_filename.c_str(), NC_WRITE|NC_MPIIO, MPI_COMM_SELF, MPI_INFO_NULL, &ncid);
+  temutil::nc(err);
+  //temutil::nc( nc_open_par(output_filename.c_str(), NC_WRITE|NC_MPIIO, MPI_COMM_SELF, MPI_INFO_NULL, &ncid) );
+  //int err2 = nc_var_par_access(ncid, cv, NC_INDEPENDENT);
+  //temutil::nc(err2);
+  //temutil::nc( nc_var_par_access(ncid, cv, NC_INDEPENDENT) );
 #else
   temutil::nc( nc_open(output_filename.c_str(), NC_WRITE, &ncid) );
 #endif
 
-  temutil::nc( nc_inq_varid(ncid, out_spec->var_name.c_str(), &cv) );
+  int err3 = nc_inq_varid(ncid, out_spec->var_name.c_str(), &cv);
+  temutil::nc(err3);
+  //temutil::nc( nc_inq_varid(ncid, out_spec->var_name.c_str(), &cv) );
   BOOST_LOG_SEV(glg, debug)<<"inq_varid completed";
+
+#ifdef WITHMPI
+  int err4 = nc_var_par_access(ncid, cv, NC_INDEPENDENT);
+  temutil::nc(err4);
+#endif
 
   temutil::nc( nc_put_vara(ncid, cv, datastart, datacount, data) );
   BOOST_LOG_SEV(glg, debug)<<"put_vara completed";
@@ -954,12 +965,15 @@ void Runner::output_nc_4dim(OutputSpec* out_spec, std::string stage_suffix,
 
 #ifdef WITHMPI
   temutil::nc( nc_open_par(output_filename.c_str(), NC_WRITE|NC_MPIIO, MPI_COMM_SELF, MPI_INFO_NULL, &ncid) );
-  temutil::nc( nc_var_par_access(ncid, cv, NC_INDEPENDENT) );
 #else
   temutil::nc( nc_open(output_filename.c_str(), NC_WRITE, &ncid) );
 #endif
 
   temutil::nc( nc_inq_varid(ncid, out_spec->var_name.c_str(), &cv) );
+
+#ifdef WITHMPI
+  temutil::nc( nc_var_par_access(ncid, cv, NC_INDEPENDENT) );
+#endif
 
   temutil::nc( nc_put_vara(ncid, cv, datastart, datacount, data) );
 
@@ -993,12 +1007,15 @@ void Runner::output_nc_5dim(OutputSpec* out_spec, std::string stage_suffix,
 
 #ifdef WITHMPI
   temutil::nc( nc_open_par(output_filename.c_str(), NC_WRITE|NC_MPIIO, MPI_COMM_SELF, MPI_INFO_NULL, &ncid) );
-  temutil::nc( nc_var_par_access(ncid, cv, NC_INDEPENDENT) );
 #else
   temutil::nc( nc_open(output_filename.c_str(), NC_WRITE, &ncid) );
 #endif
 
   temutil::nc( nc_inq_varid(ncid, out_spec->var_name.c_str(), &cv) );
+
+#ifdef WITHMPI
+  temutil::nc( nc_var_par_access(ncid, cv, NC_INDEPENDENT) );
+#endif
 
   temutil::nc( nc_put_vara(ncid, cv, datastart, datacount, data) );
 

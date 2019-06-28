@@ -102,10 +102,10 @@ if platform_name == 'Linux':
                            '/usr/include',
                            '/usr/include/openmpi-x86_64',
                            '/usr/include/jsoncpp',
-                           '/home/vagrant/netcdf-4.4.1.1/netcdf/include',
+                           '/home/vagrant/netcdf-4.4.1.1/include',
                            '~/usr/local/include']
 
-  platform_library_path = ['/u1/uaf/rarutter/custom_software/boost_1_55_0/lib', '/home/vagrant/netcdf-4.4.1.1/netcdf/lib', '/home/vagrant/hdf5-1.8.19/hdf5/lib', '/home/UA/rarutter/downloads/netcdf-4.4.1.1/netcdf/lib', '/home/UA/rarutter/downloads/hdf5-1.8.19/hdf5/lib', '/usr/lib64', '~/usr/local/lib']
+  platform_library_path = ['/u1/uaf/rarutter/custom_software/boost_1_55_0/lib', '/home/vagrant/boost_1_55_0/lib', '/home/vagrant/netcdf-4.4.1.1/netcdf/lib', '/home/vagrant/hdf5-1.8.19/hdf5/lib', '/home/UA/rarutter/downloads/netcdf-4.4.1.1/netcdf/lib', '/home/UA/rarutter/downloads/hdf5-1.8.19/hdf5/lib', '/usr/lib64', '~/usr/local/lib']
 
   compiler_flags = '-Wno-error -ansi -g -fPIC -std=c++11 -DBOOST_ALL_DYN_LINK -DBOOST_NO_CXX11_SCOPED_ENUMS -DGNU_FPE'
   platform_libs = libs
@@ -196,7 +196,7 @@ if(USEOMP):
 
 # Modify setup for MPI, if necessary
 if(USEMPI):
-  compiler = distutils.spawn.find_executable('mpicc')
+  compiler = distutils.spawn.find_executable('mpic++')
   print compiler
 
   # append src/parallel-code stuff to src_files and include_paths and libs
