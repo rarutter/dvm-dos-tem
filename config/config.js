@@ -4,7 +4,7 @@
   },
 
   "IO": {
-    "parameter_dir":      "parameters/",
+    "parameter_dir":      "/home/vagrant/parameter_sets/parameters_shrub_toolik",
     "hist_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/historic-climate.nc",
     "proj_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/projected-climate.nc",
     "veg_class_file":     "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/vegetation.nc",
@@ -22,7 +22,7 @@
     "output_spec_file":   "config/output_spec.csv",
     "output_monthly":     1, //JSON specific
     "output_nc_eq":       0,
-    "output_nc_sp":       1,
+    "output_nc_sp":       0,
     "output_nc_tr":       1,
     "output_nc_sc":       1 
   },
