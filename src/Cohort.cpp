@@ -489,11 +489,14 @@ void Cohort::updateMonthly_Env(const int & currmind, const int & dinmcurr) {
     // that calculation; for now, just use air surface temp (Raleigh shows
     // it's well-correlated but air tends to be warmer by ~5 deg C).
     double nfactor_summer_max = 2.0;
-    double nfactor_winter = 1.0;
+    double nfactor_winter_max = 0.75;
+    double nfactor_winter_min = 0.3;
     edall->d_soid.nfactor = nfactor_summer_max; //summer nfactor (max nfactor)
     //If there's snow or it's freezing, use winter nfactor
     if(cd.d_snow.numsnwl > 0 || tdrv <= 0.0){
-      edall->d_soid.nfactor = nfactor_winter;
+      edall->d_soid.nfactor = fmin(fmax((nfactor_winter_min - nfactor_winter_max)
+                            * (ground.snow.thick / 0.60)
+                            + nfactor_winter_max, nfactor_winter_min), nfactor_winter_max);
     }
 
 
