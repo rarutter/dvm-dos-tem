@@ -670,7 +670,7 @@ void advance_model(const int rowidx, const int colidx,
     runner.cohort.climate.monthlycontainers2log();
 
     BOOST_LOG_SEV(glg, debug) << "Loading RestartData from: " << eq_restart_fname;
-    runner.cohort.restartdata.update_from_ncfile(eq_restart_fname, rowidx, colidx);
+    //runner.cohort.restartdata.update_from_ncfile(eq_restart_fname, rowidx, colidx);
 
     // FIX: if restart file has -9999, then soil temps can end up
     // impossibly low should check for valid values prior to actual use
@@ -723,7 +723,7 @@ void advance_model(const int rowidx, const int colidx,
 
     // update the cohort's restart data object
     BOOST_LOG_SEV(glg, debug) << "Loading RestartData from: " << sp_restart_fname;
-    runner.cohort.restartdata.update_from_ncfile(sp_restart_fname, rowidx, colidx);
+    //runner.cohort.restartdata.update_from_ncfile(sp_restart_fname, rowidx, colidx);
 
     runner.cohort.restartdata.verify_logical_values();
 
@@ -773,7 +773,7 @@ void advance_model(const int rowidx, const int colidx,
 
     // update the cohort's restart data object
     BOOST_LOG_SEV(glg, debug) << "Loading RestartData from: " << tr_restart_fname;
-    runner.cohort.restartdata.update_from_ncfile(tr_restart_fname, rowidx, colidx);
+    //runner.cohort.restartdata.update_from_ncfile(tr_restart_fname, rowidx, colidx);
 
     BOOST_LOG_SEV(glg, debug) << "RestartData pre SC";
     runner.cohort.restartdata.restartdata_to_log();
