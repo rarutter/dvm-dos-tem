@@ -3,8 +3,8 @@
 //===========================================================
 // CMT00 // BARE GROUND OPEN WATER ICE AND SNOW
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -23,8 +23,8 @@
 //===========================================================
 // CMT01 // Black Spruce Forest // ### THESE ARE JUNK VALUES!!! ###
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -43,8 +43,8 @@
 //===========================================================
 // CMT02 // White Spruce Forest
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -63,8 +63,8 @@
 //===========================================================
 // CMT03 // Boreal Deciduous Forest
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -81,10 +81,10 @@
 0.03939            // coefminea:
 0.78               // coefmineb:
 //===========================================================
-// CMT04 // Shrub Tundra
+// CMT04 // Shrub Tundra // Calibrated for Toolik area.
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -103,8 +103,8 @@
 //===========================================================
 // CMT05 // Tussock Tundra // (updated 1/15/2016 JDC)
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -121,10 +121,10 @@
 0.0966             // coefminea:
 0.8239             // coefmineb:
 //===========================================================
-// CMT06 // Wet Sedge Tundra
+// CMT06 // Wet Sedge Tundra // Calibrated for Toolik area.
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -143,8 +143,8 @@
 //===========================================================
 // CMT07 // Heath Tundra
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -163,8 +163,8 @@
 //===========================================================
 // CMT12 // Lowland Boreal Wet Shrubland 
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -183,8 +183,8 @@
 //===========================================================
 // CMT20 // EML Shrub Tundra
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -203,8 +203,8 @@
 //===========================================================
 // CMT21 // EML Tussock Tundra
 // Snow characteristics
-350                // snwdenmax:  max. snow density (kg/m3)
-120                // snwdennew:  new (min.) snow density (kg/m3)
+250                // snwdenmax:  max. snow density (kg/m3)
+50                 // snwdennew:  new (min.) snow density (kg/m3)
 0.                 // initsnwthick: initial snow thickness (m)
 0.                 // initsnwdense: initial snow density (kg/m3)
 // moss characteristics
@@ -220,3 +220,23 @@
 0.9750             // coefdeepb:
 0.0996             // coefminea:
 0.8197             // coefmineb:
+//===========================================================
+// CMT44 // Shrub Tundra - Kougarok
+// Snow characteristics
+350                // snwdenmax:  max. snow density (kg/m3)
+120                // snwdennew:  new (min.) snow density (kg/m3)
+0.                 // initsnwthick: initial snow thickness (m)
+0.                 // initsnwdense: initial snow density (kg/m3)
+// moss characteristics
+0.035              // maxmossthick: max. moss thickness (m)
+0.005              // initdmossthick: initial dead moss thickness (m)
+1                  // mosstype: moss type (1: sphagnum; 2: furthermoss; 3: other)
+// soil characteristics
+0.05878             // initfibthick: meters
+0.11212             // inithumthick:
+0.0652              // coefshlwa:
+0.708               // coefshlwb:
+0.0545              // coefdeepa:
+0.975               // coefdeepb:
+0.0966              // coefminea:
+0.7851              // coefmineb:

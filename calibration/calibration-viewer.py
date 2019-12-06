@@ -1,9 +1,7 @@
 #!/usr/bin/env python
 
 import os
-import time
 import sys
-import glob
 import json
 import logging
 import argparse
@@ -26,6 +24,9 @@ import matplotlib.animation as animation
 import matplotlib.gridspec as gridspec
 
 import matplotlib.widgets
+
+# our own custom classes
+from InputHelper import InputHelper
 
 # Find the path to the this file so that we can look, relative to this file
 # up one directory and into the scripts/ directory
@@ -150,18 +151,6 @@ def do_nothing(signal_number, frame):
   print "Doing nothing with signal number: ", signal_number
 
 
-def yearly_files(tarfileobj):
-  '''Get the */yearly/*.json files...'''
-  for tarinfo in tarfileobj:
-    if 'yearly' in tarinfo.name:
-      yield tarinfo
-
-def monthly_files(tarfileobj):
-  '''Get the */monthly/*.json files...'''
-  for tarinfo in tarfileobj:
-    if 'monthly' in tarinfo.name:
-      yield tarinfo
-
 def worker(in_helper, the_suite, calib_targets, title, add_in_helpers, save_fname, save_fmt):
 
   logging.info("Build the plot object...")
@@ -180,156 +169,12 @@ def worker(in_helper, the_suite, calib_targets, title, add_in_helpers, save_fnam
   ewp.show(dynamic=False, save_name=save_fname, format=save_fmt)
   return
 
-class InputHelper(object):
-  '''A class to help abstract some of the details of opening .json files
-  '''
-  def __init__(self, path, monthly=False):
-    logging.debug("Making an InputHelper object...")
-    logging.debug("Looking for input files here: %s" % path )
-
-    self._monthly = monthly
-
-    # Assume path is a directory full of .json files
-    if os.path.isdir(path):
-      if self._monthly:
-        self._path = os.path.join(path, "calibration/monthly")
-      else:
-        self._path = os.path.join(path, "calibration/yearly")
-
-      logging.debug("Set input data path to: %s" % self._path)
-
-    elif os.path.isfile(path):
-      # Assume path is a .tar.gz (or other compression) with .json files in it
-
-      logging.info("Looking for input data files here: %s" % path)
-
-      DEFAULT_EXTRACTED_ARCHIVE_LOCATION = os.path.join('/tmp/extracted-calibration-archive', os.path.basename(path))
-
-      logging.info("Extracting archive to '%s'..." %
-          DEFAULT_EXTRACTED_ARCHIVE_LOCATION)
-
-      if ( os.path.isdir(DEFAULT_EXTRACTED_ARCHIVE_LOCATION) or
-          os.path.isfile(DEFAULT_EXTRACTED_ARCHIVE_LOCATION) ):
-
-        logging.info("Cleaning up the temporary archive location ('%s')..." %
-            DEFAULT_EXTRACTED_ARCHIVE_LOCATION)
-        shutil.rmtree(DEFAULT_EXTRACTED_ARCHIVE_LOCATION)
-
-      tf = tarfile.open(path)
-
-      if self._monthly:
-        tf.extractall(DEFAULT_EXTRACTED_ARCHIVE_LOCATION, members=monthly_files(tf))
-        self._path = '%s/tmp/dvmdostem/calibration/monthly/' % DEFAULT_EXTRACTED_ARCHIVE_LOCATION
-      else:
-        tf.extractall(DEFAULT_EXTRACTED_ARCHIVE_LOCATION, members=yearly_files(tf))
-        self._path = '%s/tmp/dvmdostem/calibration/yearly/' % DEFAULT_EXTRACTED_ARCHIVE_LOCATION
-
-      # This is annoying, but when extracting the files, they end up in a
-      # directory tree like this (depending on the directory structure of
-      # the archive):
-      #
-      #   /tmp/extracted-calibration-archive/tmp/dvmdostem/calibration/
-      #
-
-      tf.close()
-    else:
-      logging.error("Unable to find input data files at %s" % path)
-      sys.exit(-1)
-
-
-  def files(self):
-    '''Returns a list of files, either in a directory or .tar.gz archive'''
-    return sorted( glob.glob('%s/*.json' % self._path) )
-
-  def path(self):
-    '''Useful for client programs wanting to show where files are coming from.'''
-    return self._path
-
-  def monthly(self):
-    return self._monthly
-
-
-  def coverage_report(self, file_list):
-    '''Convenience function to write some info about files to the logs'''
-
-    logging.info( "%i json files in %s" % (len(file_list), self._path) )
-
-    if len(file_list) > 0:
-
-      if self._monthly:
-        ffy = int( os.path.splitext(os.path.basename(file_list[0]))[0] ) / 12
-        lfy = int( os.path.splitext(os.path.basename(file_list[-1]))[0] ) / 12
-        ffm = int( os.path.splitext(os.path.basename(file_list[0]))[0] ) % 12
-        lfm = int( os.path.splitext(os.path.basename(file_list[-1]))[0] ) % 12
-      else:
-        ffy = int(os.path.basename(file_list[0])[0:5])
-        lfy = int(os.path.basename(file_list[-1])[0:5])
-        ffm = '--'
-        lfm = '--'
-
-      logging.debug( "First file: %s (year %s, month %s)" % (file_list[0], ffy, ffm) )
-      logging.debug( "Last file: %s (year %s, month %s)" % (file_list[-1], lfy, lfm) )
-
-      if lfy > 0:
-        pc = 100 * len(file_list) / len(np.arange(ffy, lfy))
-        logging.debug( "%s percent of range covered by existing files" % (pc) )
-      else:
-        logging.debug("Too few files to calculate % coverage.")
-
-    else:
-      logging.warning("No json files! Length of file list: %s." % len(file_list))
-
-  def report(self):
-
-    log = logging.getLogger('inputhelper::reportA')
-
-    log.info( "Path to input files: %s" % (self.path()) )
-
-    files = self.files()
-
-    if len(files) > 0:
-      if self._monthly:
-        ffy = int( os.path.splitext(os.path.basename(files[0]))[0] ) / 12
-        lfy = int( os.path.splitext(os.path.basename(files[-1]))[0] ) / 12
-        ffm = int( os.path.splitext(os.path.basename(files[0]))[0] ) % 12
-        lfm = int( os.path.splitext(os.path.basename(files[-1]))[0] ) % 12
-      else:
-        ffy = int(os.path.basename(files[0])[0:5])
-        lfy = int(os.path.basename(files[-1])[0:5])
-        ffm = '--'
-        lfm = '--'
-
-      if (len(files) != ((lfy-ffy)+1)):
-        log.warn("SOMETHING IS WRONG WITH THE INPUT DATA: count:%s last:%s first:%s:" % (len(files), lfy, ffy ))
-
-      if ffm != '--' and lfm != '--':
-        pass
-
-      self.report_on_file(files[0])
-      self.report_on_file(files[-1])
-    else:
-      logging.warning("No json files! Length of file list: %s." % len(files))
-
-  def report_on_file(self, f0):
-    log = logging.getLogger('inputhelper::reportB')
-    log.info( "::=> FILE %s" % (f0) )
-    try:
-      with open(f0) as f:
-        fdata = json.load(f)
-
-      "".format(fdata["Runstage"], fdata["CMT"], fdata["Lat"], fdata["Lon"])
-      details = "Runstage:%s CMT:%s Coords:(%.2f,%.2f)" % (fdata["Runstage"], fdata["CMT"], fdata["Lat"], fdata["Lon"])
-      log.info( "::==> %s" % (details) )
-    except (IOError, ValueError) as e:
-      log.error("Problem: '%s' reading file '%s'" % (e, f))
-
-
 
 class ExpandingWindow(object):
   '''A set of expanding window plots that all share the x axis.'''
 
   def __init__(self, input_helper, traceslist, figtitle="Expanding Window Plot",
-      rows=2, cols=1, targets={}, no_show=False, extrainput=[]):
+      rows=2, cols=1, targets={}, no_show=False, extrainput=[], no_blit=False):
 
     logging.debug("Ctor for Expanding Window plot...")
 
@@ -344,6 +189,16 @@ class ExpandingWindow(object):
     self.targets = targets
 
     self.no_show = no_show
+
+    self.no_blit = no_blit
+
+    # Setting controlling where this program will look for reference parameters 
+    # that are used for finding PFT names. The default setting is to look for 
+    # in a parameters/ directory relative to the current location (location 
+    # from which this calibration_viewer.py script was run). An alternate value 
+    # for this setting is 'relative_to_dvmdostem' in which this program will
+    # look for the parameters/ directory that ships with dvmdostem.
+    self.reference_param_loc = 'relative_to_curdir'
 
     self.fig = plt.figure(figsize=(6*1.3, 8*1.3))
     self.ewp_title = self.fig.suptitle(figtitle)
@@ -448,7 +303,6 @@ class ExpandingWindow(object):
 
     # ----- READ FIRST FILE FOR TITLE ------
     self.set_title_from_first_file(files)
-
     # for each trace, create a tmp y container the same size as x
     for trace in self.traces:
       trace['tmpy'] = x.copy() * np.nan
@@ -897,7 +751,7 @@ class ExpandingWindow(object):
           vname = ''
         else:
           cmtkey = t_line0[spos:spos+5]
-          vname = "(%s)" % pu.get_pft_verbose_name(pftkey=trace['pft'], cmtkey=cmtkey)
+          vname = "(%s)" % pu.get_pft_verbose_name(pftkey=trace['pft'], cmtkey=cmtkey, lookup_path=self.reference_param_loc)
         logger.debug("verbose PFT name is: %s" % vname)
 
         ax.text(
@@ -951,7 +805,7 @@ class ExpandingWindow(object):
     if dynamic:
       logging.info("Setup animation.")
       self.ani = animation.FuncAnimation(self.fig, self.update, interval=100,
-                                         init_func=self.init, blit=True)
+                                         init_func=self.init, blit=(not self.no_blit))
 
     if save_name != "":
       # the saved file will represent a snapshot of the state of the json
@@ -994,7 +848,6 @@ class ExpandingWindow(object):
 if __name__ == '__main__':
 
   from configured_suites import configured_suites
-  import calibration_targets
   
   # Callback for SIGINT. Allows exit w/o printing stacktrace to users screen
   original_sigint = signal.getsignal(signal.SIGINT)
@@ -1036,6 +889,12 @@ if __name__ == '__main__':
   parser.add_argument('--list-suites', action='store_true',
       help="print out configured suites")
 
+  parser.add_argument('--no-blit', action='store_true',
+      help=textwrap.dedent('''\
+        Some systems have difficulty with blitting which is a technique used to 
+        speed up animations. If blitting works, then you should use it; if you
+        are having problems then use this option to turn blitting off.
+        '''))
 
   targetgroup = parser.add_mutually_exclusive_group()
 
@@ -1049,6 +908,12 @@ if __name__ == '__main__':
   parser.add_argument('--list-caltargets', action='store_true',
       help="print out a list of known calibration target communities")
 
+  parser.add_argument('--ref-targets', default=None,
+     help=textwrap.dedent('''Path to a calibration_targets.py file that will be
+      used for dsiplaying target lines. If this argument is not provided, then
+      the program will look for an use the calibration targets file that is
+      expected to live alongside this program (in dvm-dos-tem/calibration/
+      directory).''')) 
 
   parser.add_argument('-l', '--loglevel', default="warning",
       help="What logging level to use. (debug, info, warning, error, critical")
@@ -1082,9 +947,8 @@ if __name__ == '__main__':
       help=textwrap.dedent('''Read and disply monthly json files instead of 
           yearly. NOTE: may be slow!!'''))
 
-  parser.add_argument('--data-path', default="/tmp/dvmdostem/",
-      help=textwrap.dedent('''Look for json files in the specified path
-          (instead of the default location)'''))
+  parser.add_argument('--data-path', default=None,
+      help=textwrap.dedent('''Look for json files in the specified path'''))
 
   parser.add_argument('--bulk', action='store_true',
       help=textwrap.dedent('''With this flag, the viewer will attempt to
@@ -1154,8 +1018,8 @@ if __name__ == '__main__':
 
   logger.info("Starting main app...")
 
-  logging.info("Dynamic=%s Static=%s No-show=%s Save-name='%s'" %
-      (not args.static, args.static, args.no_show, args.save_name))
+  logging.info("Dynamic=%s Static=%s Blitting=%s No-show=%s Save-name='%s'" %
+      (not args.static, args.static, (not args.no_blit), args.no_show, args.save_name))
 
 
 
@@ -1180,7 +1044,14 @@ if __name__ == '__main__':
   if args.from_archive:
     input_helper = InputHelper(path=args.from_archive, monthly=args.monthly)
   else:
-    input_helper = InputHelper(path=args.data_path, monthly=args.monthly)
+    if args.data_path is None:
+      parser.error("You must specify --data-path so the program knows which files to plot!")
+    if os.path.basename(args.data_path) != 'dvmdostem':
+      logging.info("Adding 'dvmdostem' to data path...")
+      dp = os.path.join(args.data_path, 'dvmdostem')
+    else:
+      dp = args.data_path
+    input_helper = InputHelper(path=dp, monthly=args.monthly)
 
   #logging.info("from_archive=%s" % args.from_archive)
   #logging.info("data_path=%s" % args.data_path)
@@ -1191,6 +1062,7 @@ if __name__ == '__main__':
   if args.targets:
     logging.info("Setting up calibration target display...")
     if len(input_helper.files()) > 0:
+      # Figure out which CMT we are dealing with
       try:
         with open(input_helper.files()[0], 'r') as ff:
           fdata = json.load(ff)
@@ -1198,12 +1070,41 @@ if __name__ == '__main__':
       except (IOError, ValueError) as e:
         logging.error("Problem: '%s' reading file '%s'" % (e, f))
 
-      for cmtname, data in calibration_targets.calibration_targets.iteritems():
-        if cmtstr == 'CMT{:02d}'.format(data['cmtnumber']):
-          caltargets = data
-          target_title_tag = "CMT {} ({:})".format(data['cmtnumber'], cmtname)
-        else:
-          pass # wrong cmt
+      # Figure out where to find the targets.
+      found_targets = False
+      if args.ref_targets:
+        # May want to save path, clear it, add only the new target location
+        # and try the import. on success, print something... and show lines??
+        # if it fails then log message, and restore path, and continue
+        try:
+          print "Trying to look for targets here: {}".format(os.path.abspath(args.ref_targets))
+          orig_path = sys.path
+          sys.path = [os.path.abspath(args.ref_targets)]
+          import calibration_targets
+          sys.path = orig_path
+          found_targets = True
+          print "Restoring path..."
+        except (ImportError, NameError) as e:
+          logging.error("Can't display target lines!! Can't find targets! {}".format(e.message))
+
+      else:
+        try:
+          print "Trying to look for targets here: {}".format(os.path.abspath(args.ref_targets))
+          import calibration_targets
+          found_targets = True
+        except (ImportError, NameError) as e:
+          logging.error("Can't display target lines!! Can't find targets! {}".format(e.message))
+
+      if found_targets:
+        for cmtname, data in calibration_targets.calibration_targets.iteritems():
+          if cmtstr == 'CMT{:02d}'.format(data['cmtnumber']):
+            caltargets = data
+            target_title_tag = "CMT {} ({:})".format(data['cmtnumber'], cmtname)
+          else:
+            pass # wrong cmt
+      else:
+        caltargets = {}
+        target_title_tag = "--"
 
     else:
       print logging.warn("No files. Can't figure out which CMT to display targets for without files.")
@@ -1259,7 +1160,8 @@ if __name__ == '__main__':
                           targets=caltargets,
                           figtitle="%s\nTargets Values for: %s" % (args.suite, target_title_tag),
                           no_show=args.no_show,
-                          extrainput=additional_input_helpers
+                          extrainput=additional_input_helpers,
+                          no_blit=args.no_blit,
                          )
 
     logging.info("Show the plot object...")

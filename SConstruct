@@ -102,6 +102,7 @@ if platform_name == 'Linux':
                            '/usr/include',
                            '/usr/include/openmpi-x86_64',
                            '/usr/include/jsoncpp',
+                           '/usr/include/lapacke',
                            '/home/vagrant/netcdf-4.4.1.1/netcdf/include',
                            '~/usr/local/include']
 

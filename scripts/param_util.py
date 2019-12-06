@@ -7,6 +7,16 @@ import os
 import json
 import re
 import glob
+import sys
+
+# This helps to more quickly diagnose errors that show up when
+# using older (typically system) versions of Python. Usually this
+# happens when a user forgets to activate a virtual environment or
+# load the correct modules.
+if float('%d.%d'%(sys.version_info[0:2])) < 2.7:
+ raise Exception("Must use Python version 2.7 or greater!")
+
+
 
 def error_exit(fname, msg, linenumber=None):
   '''
@@ -85,6 +95,10 @@ def find_cmt_start_idx(data, cmtkey):
     The first index in the list where the CMT key is found. If key is not found
     returns None.
   '''
+
+  # NOTE: Should probably rasie some kind of ERROR if CMTKEY is not 
+  # somethign like CMT00
+
   for i, line in enumerate(data):
     if cmtkey.upper() in line:
       return i
@@ -109,6 +123,113 @@ def read_paramfile(thefile):
   with open(thefile, 'r') as f:
     data = f.readlines()
   return data
+
+def compare_CMTs(fileA, cmtnumA, fileB, cmtnumB, ignore_formatting=True):
+  '''
+  Compares the specified CMT data blocks in each file line by line, prints
+  "Match" if the lines are the same, otherwise print the lines for visual 
+  comparison.
+
+  By running the datablocks thru the format function, we can compare on values
+  and ignore whitespace/formatting differences.
+
+  Parameters
+  ----------
+  fileA : str
+    Path to file for comparison.
+  cmtnumA : int
+    Number of CMT for comparison.
+  fileB : str
+    Path to file for comparison.
+  cmtnumB : int
+    Number of CMT for comparison.
+  ignore_formatting : bool
+    When True (default) it is easy to see how the numbers differ. When this 
+    setting is False, lines with different formatting will not match, i.e. 
+    0.0 and  0.000 will show up as different.
+
+  Returns
+  -------
+  None
+  '''
+  dataA = get_CMT_datablock(fileA, cmtnumA)
+  dataB = get_CMT_datablock(fileB, cmtnumB)
+
+  # Standardize whitespace and numeric format using the foratting function.
+  if ignore_formatting:
+    dataA = format_CMTdatadict(cmtdatablock2dict(dataA), fileA)
+    dataB = format_CMTdatadict(cmtdatablock2dict(dataB), fileB)
+  else:
+    pass
+
+  # Loop over the lines in the data block testing them
+  for i, (A, B) in enumerate(zip(dataA, dataB)):
+    if A == B:
+      print "LINE {} match!".format(i)
+    else:
+      print "LINE {} difference detected! ".format(i)
+      print "   A: {}".format(A)
+      print "   B: {}".format(B)
+      print ""
+
+def is_CMT_divider_line(line):
+  '''
+  Checks to see if a line is one of the comment lines we use to divide
+  CMT data blocks in parameter files, e.g. // ====== '''
+  return re.search('^//[ =]+', line.strip())
+
+
+def replace_CMT_data(origfile, newfile, cmtnum, overwrite=False):
+  '''
+  Replaces the CMT datablock in `origfile` with the data block found in
+  `newfile` for the provided `cmtnum`. If `overwrite` is True, then `origfile`
+  is written with the new data. Returns a list of lines which can then be 
+  printed to stdout or otherwise redirected to a file.
+
+  Parameters
+  ----------
+  `origfile` : str
+    Path to a file with CMT data blocks.
+  `newfile` : str
+    Path to a file with CMT data blocks.
+  `cmtnum` : int
+    Number of the CMT to look for.
+
+  Returns
+  -------
+  List of lines.
+  '''
+  with open(origfile, 'r') as f:
+    data = f.readlines()
+
+  sidx = find_cmt_start_idx(data, 'CMT{:02d}'.format(cmtnum))
+
+  # What should happen if both files don't have the requested CMT?
+
+  orig_data = get_CMT_datablock(origfile, cmtnum)
+  if not is_CMT_divider_line(orig_data[-1]):
+    print "WARNING: last line of data block in original file is not as expected!"
+
+  data[sidx:(sidx+len(orig_data))] = []
+
+  new_data = get_CMT_datablock(newfile, cmtnum)
+
+  if not is_CMT_divider_line(new_data[-1]):
+    if is_CMT_divider_line(orig_data[-1]):
+      new_data.append(orig_data[-1])
+    else:
+      print "WARNING: last line of data block in original file is not as expected!"
+
+  data[sidx:sidx] = new_data
+
+  if overwrite:
+    with open(origfile, 'w') as f:
+      f.writelines(data)
+  else:
+    pass
+
+  return data
+
 
 def get_CMT_datablock(afile, cmtnum):
   '''
@@ -139,6 +260,8 @@ def get_CMT_datablock(afile, cmtnum):
     cmtkey = cmtnum
 
   startidx = find_cmt_start_idx(data, cmtkey)
+  if startidx is None:
+    raise RuntimeError("Can't find datablock for CMT: {} in {}".format(cmtkey, afile))
 
   end = None
 
@@ -215,11 +338,17 @@ def parse_header_line(linedata):
   return cmtkey, cmtname, cmtcomment
 
 
-def get_pft_verbose_name(cmtkey=None, pftkey=None, cmtnum=None, pftnum=None):
-  path2params = os.path.join(os.path.split(os.path.dirname(os.path.realpath(__file__)))[0], 'parameters/')
+def get_pft_verbose_name(cmtkey=None, pftkey=None, cmtnum=None, pftnum=None, lookup_path=None):
+  if lookup_path is "relative_to_dvmdostem":
+    path2params = os.path.join(os.path.split(os.path.dirname(os.path.realpath(__file__)))[0], 'parameters/')
+  elif lookup_path is "relative_to_curdir":
+    path2params = os.path.join(os.path.abspath(os.path.curdir), 'parameters/')
+  else:
+    msg = "ERROR!: lookup_path parameter must be one of 'relative_to_dvmdostem' or 'relative_to_curdir', not {}".format(lookup_path)
+    raise ValueError(msg)
 
   if cmtkey and cmtnum:
-    raise ValueError("you must provide only one of you cmtkey or cmtnumber")
+    raise ValueError("you must provide only one of cmtkey or cmtnumber")
 
   if pftkey and pftnum:
     raise ValueError("you must provide only one of pftkey or pftnumber")
@@ -516,6 +645,114 @@ def enforce_initvegc_split(aFile, cmtnum):
 
   return dd
 
+def get_ecosystem_total_C(cmtstr, ref_params_dir):
+  
+
+  veg_param_file = os.path.join(os.path.abspath(ref_params_dir), 'cmt_bgcvegetation.txt')
+  soil_param_file = os.path.join(os.path.abspath(ref_params_dir), 'cmt_bgcsoil.txt')
+
+  # First start with the vegetation numbers
+  d = get_CMT_datablock(veg_param_file, int(cmtstr.upper().lstrip('CMT')))
+  dd = cmtdatablock2dict(d)
+
+  vegC = 0.0
+  for pft in ['pft{}'.format(i) for i in range(0,10)]:
+    
+    if dd[pft]['name'].lower() in 'none,misc,misc.,pft0,pft1,pft2,pft3,pft4,pft5,pft6,pft7,pft8,pft9'.split(","):
+      pass # This PFT is not defined for this community
+      # This is probably unnecessary because generally un-defined PFTs have all 
+      # zero values...
+    else:
+      vegC += dd[pft]['initvegcl']
+      vegC += dd[pft]['initvegcw']
+      vegC += dd[pft]['initvegcr']
+
+  # Now load up the soil numbers
+  d = get_CMT_datablock(soil_param_file, int(cmtstr.upper().lstrip('CMT')))
+  dd = cmtdatablock2dict(d)
+
+  soilC = 0.0
+  soilC += dd['initshlwc']
+  soilC += dd['initdeepc']
+  soilC += dd['initminec']
+
+  return vegC + soilC
+
+
+def percent_ecosys_contribution(cmtstr, tname=None, pftnum=None, compartment=None, ref_params_dir=None):
+
+  pec = 1.0 # Start by assuming everythign has a contribution of 1
+  total_C = get_ecosystem_total_C(cmtstr, ref_params_dir)
+
+  veg_param_ref_file = os.path.join(os.path.abspath(ref_params_dir), 'cmt_bgcvegetation.txt')
+
+  if tname == 'OrganicNitrogenSum' or tname == 'AvailableNitrogenSum':
+    # These parameters are in cmt_bgcsoil.txt as 'initsoln' and 'initavln'
+    # but I am not sure what to do with them yet...
+    pec = 1.0
+
+  if tname in ['MossDeathC','CarbonShallow','CarbonDeep','CarbonMineralSum']:
+    pec = 1.0
+
+  if pftnum is not None and compartment is None:
+
+    d = get_CMT_datablock(veg_param_ref_file, int(cmtstr.upper().lstrip('CMT')))
+    dd = cmtdatablock2dict(d)
+
+    pftstr = 'pft{}'.format(pftnum)
+    pft_total_init_c = dd[pftstr]['initvegcl'] + dd[pftstr]['initvegcw'] + dd[pftstr]['initvegcr']
+    pec = pft_total_init_c / total_C
+
+  if pftnum is not None and compartment is not None:
+    total = get_ecosystem_total_C(cmtstr, ref_params_dir)
+
+    d = get_CMT_datablock(veg_param_ref_file, int(cmtstr.upper().lstrip('CMT')))
+    dd = cmtdatablock2dict(d)
+    pftstr = 'pft{}'.format(pftnum)
+
+    if compartment == 'Leaf':
+      c = 'initvegcl'
+    elif compartment == 'Stem':
+      c = 'initvegcw'
+    elif compartment == 'Root':
+      c = 'initvegcr'
+    else:
+      raise RuntimeError("Invalid compartment specification: {}! Must be one of Leaf, Stem Root".format(compartment)) 
+
+    pec = dd[pftstr][c] / total_C
+
+  #print "cmtstr: {}  tname: {}  pftnum: {}  compartment: {}  PEC: {}".format(cmtstr, tname, pftnum, compartment, pec)
+  return pec
+
+def is_ecosys_contributor(cmtstr, pftnum=None, compartment=None, ref_params_dir=None):
+
+  pftstr = 'pft{}'.format(pftnum)
+
+  d = get_CMT_datablock(os.path.join(os.path.abspath(ref_params_dir), 'cmt_bgcvegetation.txt'), int(cmtstr.upper().lstrip('CMT')))
+  dd = cmtdatablock2dict(d)
+
+  is_contrib = True
+
+  if pftnum is not None:
+
+    if dd[pftstr]['name'].lower() in 'none,misc,misc.,pft0,pft1,pft2,pft3,pft4,pft5,pft6,pft7,pft8,pft9'.split(","):
+      is_contrib = False
+    else:
+      
+      if compartment is not None:
+        if compartment == 'Leaf':
+          c = 'initvegcl'
+        elif compartment == 'Stem':
+          c = 'initvegcw'
+        elif compartment == 'Root':
+          c = 'initvegcr'
+        else:
+          raise RuntimeError("Invalid compartment specification: {}! Must be one of Leaf, Stem Root".format(compartment))    
+
+        if dd[pftstr][c] <= 0.0:
+          is_contrib = False
+
+  return is_contrib
 
 
 
@@ -542,6 +779,15 @@ if __name__ == '__main__':
         the specified community and adjusts the cpart compartment parmeters so 
         as to match the proportions of the initvegc compartment parameters.
         Re-formats the block of data and prints to stdout.'''))
+
+  parser.add_argument('--replace-cmt-block', nargs=3, metavar=('AFILE','BFILE','CMTNUM'),
+      help=textwrap.dedent('''Replaces the CMT datablock in AFILE with the 
+        contents CMT data in BFILE. Assumes that the CMTNUM exists in both files!'''))
+
+  parser.add_argument('--compare-cmtblocks', nargs=4, metavar=('AFILE','ANUM','BFILE','BNUM'),
+      help=textwrap.dedent('''Do a line by line comparison of the CMT data blocks
+        in FILEA and FILEB. The comparison ignores whitespace and numeric formatting.
+        prints report indicating which lines match.'''))
 
   parser.add_argument('--dump-block-to-json', nargs=2, metavar=('FILE', 'CMT'),
       help=textwrap.dedent('''Extract the specific CMT data block from the
@@ -689,6 +935,27 @@ if __name__ == '__main__':
     plt.show(block=True)
 
     sys.exit(0)
+
+  if args.compare_cmtblocks:
+    fileA, numA, fileB, numB = args.compare_cmtblocks
+    numA = int(numA)
+    numB = int(numB)
+    print "Comparing:"
+    print "      CMT {} in {} ".format(fileA, numA)
+    print "      CMT {} in {} ".format(fileB, numB)
+
+    compare_CMTs(fileA, numA, fileB, numB)
+    sys.exit(0)
+
+  if args.replace_cmt_block:
+    A, B, cmtnum = args.replace_cmt_block
+    # Print the result to stdout, where it can be inspected and or 
+    # re-directed to a file
+    lines = replace_CMT_data(A, B, int(cmtnum))
+    for l in lines:
+      print l.rstrip("\n")
+    sys.exit(0)
+
 
   if args.report_pft_names:
 

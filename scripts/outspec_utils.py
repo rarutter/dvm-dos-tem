@@ -25,12 +25,14 @@ import textwrap
 
 def print_line_dict(d, header=False):
   if header:
-    print "{:>20s} {:>20s} {:>12} {:>12} {:>12} {:>12} {:>12} {:>12} {:>12}     {:}".format('Name','Units','Yearly','Monthly','Daily','PFT','Compartments','Layers','Description', 'Data Type')
+    print "{:>20s} {:>20s} {:>12} {:>12} {:>12} {:>12} {:>12} {:>12} {:>12}     {:}".format('Name','Units','Yearly','Monthly','Daily','PFT','Compartments','Layers','Data Type', 'Description')
   else:
-    print "{Name:>20s} {Units:>20s} {Yearly:>12} {Monthly:>12} {Daily:>12} {PFT:>12} {Compartments:>12} {Layers:>12}     {Description}     {Data Type:>12}".format(**d)
+    print "{Name:>20s} {Units:>20s} {Yearly:>12} {Monthly:>12} {Daily:>12} {PFT:>12} {Compartments:>12} {Layers:>12} {Data Type:>12}     {Description}".format(**d)
 
-def list_vars(data):
+def list_vars(data, verbose=False):
   var_names = [line['Name'] for line in data]
+  if verbose:
+    var_names = ['{:<20} {:<}'.format(line['Name'], line['Description']) for line in data]
   return sorted(var_names)
 
 def show_yearly_vars(data):
@@ -98,6 +100,24 @@ def write_data_to_csv(data, fname):
       writer.writeheader()
       writer.writerows(data)
 
+
+def check_layer_vars(data):
+
+  def warn_layers_not_set(dd):
+    if all([x == 'invalid' or x == '' for x in [dd['Layers'],]]):
+      print "WARNING! output by Layers not set for {}".format(dd['Name'])
+
+  for line in data:
+    if 'LAYER' in line['Name'].upper():
+      if any([line['Yearly'].lower() in ('y','year','yr','yearly')]):
+        warn_layers_not_set(line)
+      if any([line['Monthly'].lower() in ('m','month','monthly')]):
+        warn_layers_not_set(line)
+      if any([line['Daily'].lower() in ('d','day','daily',)]):
+        warn_layers_not_set(line)
+
+
+
 def toggle_off_variable(data, var):
   if var not in list_vars(data):
     raise ValueError("Invalid variable! {} not found!".format(var))
@@ -145,32 +165,32 @@ def toggle_on_variable(data, var, res_spec):
       # Work from coarsest to finest so that if the user specifies
       # (for some reason) yearly *and* daily, the daily overwrites
       # the yearly setting.
-      if any([r.lower() in ('y','year','yr','yearly') for r in res_spec]):
+      if any([r.lower() in ('y','year','yr','yearly') for r in res_spec.split(' ')]):
         safe_set(line, 'Yearly', 'y')
         safe_set(line, 'Monthly', '')
         safe_set(line, 'Daily', '')
 
-      if any([r.lower() in ('m','month','monthly') for r in res_spec]):
+      if any([r.lower() in ('m','month','monthly') for r in res_spec.split(' ')]):
         safe_set(line, 'Yearly', 'y')
         safe_set(line, 'Monthly', 'm')
         safe_set(line, 'Daily', '')
 
-      if any([r.lower() in ('d','day','daily',) for r in res_spec]):
+      if any([r.lower() in ('d','day','daily',) for r in res_spec.split(' ')]):
         safe_set(line, 'Yearly', 'y')
         safe_set(line, 'Monthly', 'm')
         safe_set(line, 'Daily', 'd')
 
       # Same for PFTs, work from coarsest to finest
-      if any([r.lower() in ('p','pft',) for r in res_spec]):
+      if any([r.lower() in ('p','pft',) for r in res_spec.split(' ')]):
         safe_set(line, 'PFT', 'p')
         safe_set(line, 'Compartments', '')
 
-      if any([r.lower() in ('c','cpt','compartment','cmpt',) for r in res_spec]):
+      if any([r.lower() in ('c','cpt','compartment','cmpt',) for r in res_spec.split(' ')]):
         safe_set(line, 'PFT', 'p')
         safe_set(line, 'Compartments', 'c')
 
       # And finally the layers...
-      if any([r.lower() in ('l','layer','lay') for r in res_spec]):
+      if any([r.lower() in ('l','layer','lay') for r in res_spec.split(' ')]):
         safe_set(line, 'Layers', 'l')
 
       print_line_dict({}, header=True)
@@ -178,6 +198,8 @@ def toggle_on_variable(data, var, res_spec):
 
       if all([x == 'invalid' or x == '' for x in [line['Yearly'], line['Monthly'], line['Daily']]]):
         print "WARNING! Invalid TIME setting detected! You won't get output for {}".format(line['Name'])
+
+  check_layer_vars(data)
 
   return data
 
@@ -213,6 +235,9 @@ if __name__ == '__main__':
       metavar=('FILE'), 
       help=textwrap.dedent('''The file to analyze.'''))
 
+  parser.add_argument('--print-file', action='store_true',
+     help=textwrap.dedent('''Print a nicely formatted version of the file to the console.'''))
+
   parser.add_argument('--list-vars', action='store_true',
       help=textwrap.dedent('''List all available variables.'''))
 
@@ -238,6 +263,9 @@ if __name__ == '__main__':
       help=textwrap.dedent('''Print out all the variables that are enabled in 
         the file.'''))
 
+  parser.add_argument('--enable-cal-vars', action='store_true',
+    help=textwrap.dedent('''Enable netcdf outputs for all the calibration target variables.'''))
+
   parser.add_argument('--on', 
       nargs='+', metavar=('VAR', 'RES',),
       help=textwrap.dedent('''Turn the selected variable on at the selected
@@ -258,9 +286,15 @@ if __name__ == '__main__':
   if args.DEBUG:
     print args
 
+  if args.print_file:
+    data = csv_file_to_data_dict_list(args.file)
+    print_line_dict(data[0], header=True)
+    for line in data:
+      print_line_dict(line)
+
   if args.list_vars:
     data = csv_file_to_data_dict_list(args.file)
-    print "\n".join(sorted(list_vars(data)))
+    print "\n".join(sorted(list_vars(data, verbose=True)))
     sys.exit()
 
   if args.show_yearly_vars:
@@ -295,6 +329,42 @@ if __name__ == '__main__':
         pass # Nothing turned on...
       else:
         print_line_dict(line)
+    check_layer_vars(data)
+    sys.exit()
+
+  if args.enable_cal_vars:
+    caltargets2ncname_map = [
+      ('GPPAllIgnoringNitrogen','INGPP'),
+      ('NPPAllIgnoringNitrogen','INNPP'),
+      ('NPPAll','NPP'),
+      # ??? There are snuptake, lnuptake and innuptake (in the C++)
+      # and TotNitrogentUptake (in the cal targets) is the sum of sn and ln...
+      #('Nuptake','NUPTAKE'), 
+      ('VegCarbon','VEGC'),
+      ('VegStructuralNitrogen','VEGN'),
+      ('MossDeathC','MOSSDEATHC'),
+      ('CarbonShallow','SHLWC'),
+      ('CarbonDeep','DEEPC'),
+      ('CarbonMineralSum','MINEC'),
+      ('OrganicNitrogenSum','ORGN'),
+      ('AvailableNitrogenSum','AVLN'),
+      ]
+
+    data = csv_file_to_data_dict_list(args.file)
+
+    for v in "MOSSDEATHC SHLWC DEEPC MINEC ORGN AVLN".split():
+      data = toggle_on_variable(data, v, 'yearly')
+
+    for v in "INGPP INNPP NPP".split():
+      data = toggle_on_variable(data, v, 'yearly pft')
+
+    for v in "VEGC VEGN".split():
+      data = toggle_on_variable(data, v, 'yearly pft compartment')
+
+    write_data_to_csv(data, args.file)
+
+    print "NOTE: Make sure to enable 'eq' outputs in the config file!!!"
+
     sys.exit()
 
   if args.on:
@@ -327,6 +397,7 @@ if __name__ == '__main__':
     data = all_vars_off(data)
     write_data_to_csv(data, args.file)
     sys.exit()
+
 
 
 
