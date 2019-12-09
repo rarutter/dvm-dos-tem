@@ -142,7 +142,7 @@ for i, cell in enumerate(coord_list):
 # SUMMARIZE
 #
 number_batches = batch
-assert (nbatches == number_batches), "PROBLEM: Something is wrong with the batch numbers: {} vs {}".format(nbatches, number_batches)
+#assert (nbatches == number_batches), "PROBLEM: Something is wrong with the batch numbers: {} vs {}".format(nbatches, number_batches)
 print "Split cells into {} batches...".format(number_batches)
 
 #

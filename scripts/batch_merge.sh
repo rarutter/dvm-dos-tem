@@ -6,8 +6,8 @@
 # 2018
 
 
-OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/Toolik_50x50_ncarprodrun_20181204_0"
-OUTPUT_SPEC_PATH="./config/output_spec_production.csv"
+OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/20190626_0_Utqiagvik_50sq_mri"
+OUTPUT_SPEC_PATH="./config/Toolik_Utqiagvik_50_output_spec_production_HG.csv"
 STAGES="eq sp tr sc"
 TIMESTEPS="daily monthly yearly"
 BATCH_DIR="${OUTPUT_DIR_PREFIX}/batch-run"
