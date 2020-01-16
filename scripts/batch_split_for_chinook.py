@@ -180,10 +180,10 @@ for batch in range(0, number_batches):
   #SBATCH --mail-type=FAIL
 
   # Job name, for clarity
-  #SBATCH --job-name="ddt-batch-{0}"
+  #SBATCH --job-name="ddt-{0}"
 
   # Time limit
-  #SBATCH --time=2:00:00
+  #SBATCH --time=6:00:00
 
   # Partition specification
   #SBATCH -p t1standard 
