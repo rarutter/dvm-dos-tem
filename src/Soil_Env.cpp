@@ -44,6 +44,7 @@ Soil_Env::~Soil_Env() {
 void Soil_Env::initializeParameter() {
   envpar.psimax  = chtlu->psimax;
   envpar.evapmin = chtlu->evapmin;
+  envpar.wfact = chtlu->wfact;
   envpar.rtdp4gdd = chtlu->rtdp4gdd;
 };
 
@@ -845,7 +846,7 @@ double Soil_Env::getRunoff(Layer* toplayer, Layer* drainl,
     //Water table depth
     double wtd = getWaterTable(ground->lstsoill);
     //Saturated fraction, from CLM3/Oleson 2004, equation 7.53
-    double frasat = WFACT * min(1.0,exp(-wtd));
+    double frasat = envpar.wfact * min(1.0,exp(-wtd));
     //CLM3/Oleson 2004, equation 7.59.
     runoff = (frasat  + (1.-frasat)*pow((double)avgs, 4.) )
              * (rnth +melt); //So, unit same as "rainfall/snowmelt)"

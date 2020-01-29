@@ -130,6 +130,9 @@ public:
   double evapmin; //min. reduction of potential soil evaporation
                   //  after rainfall (that's why 'dsr' is needed)
 
+  double wfact; //A parameter determined by the distribution of the
+                // topographic index. Source: CLM3/Oleson 2004
+
   // inital thermal/water states of snow/soil
   double initsnwtem; //1 snow input: initial snow temperature
                      //  (note: initial water of snow can be from
