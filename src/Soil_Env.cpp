@@ -44,7 +44,6 @@ Soil_Env::~Soil_Env() {
 void Soil_Env::initializeParameter() {
   envpar.psimax  = chtlu->psimax;
   envpar.evapmin = chtlu->evapmin;
-  envpar.drainmax = chtlu->drainmax;
   envpar.rtdp4gdd = chtlu->rtdp4gdd;
 };
 

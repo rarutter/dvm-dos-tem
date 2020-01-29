@@ -130,9 +130,6 @@ public:
   double evapmin; //min. reduction of potential soil evaporation
                   //  after rainfall (that's why 'dsr' is needed)
 
-  // parameter for soil drainage
-  double drainmax;
-
   // inital thermal/water states of snow/soil
   double initsnwtem; //1 snow input: initial snow temperature
                      //  (note: initial water of snow can be from

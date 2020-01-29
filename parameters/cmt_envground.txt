@@ -6,7 +6,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -35,7 +34,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -64,7 +62,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -93,7 +90,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -122,7 +118,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -151,7 +146,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -181,7 +175,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -210,7 +203,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -239,7 +231,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -268,7 +259,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -297,7 +287,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -326,7 +315,6 @@
 0.4                // snwalbmin:
 -1.5e7             // psimax:
 0.08               // evapmin:
-0.04               // drainmax
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)

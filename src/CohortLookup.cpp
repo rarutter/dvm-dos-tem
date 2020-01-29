@@ -416,7 +416,7 @@ void CohortLookup::assignEnv4Ground(string &dircmt) {
 
   // get a list of data for the cmt number
   std::list<std::string> datalist = temutil::parse_parameter_file(
-      dircmt + "cmt_envground.txt", temutil::cmtcode2num(this->cmtcode), 27
+      dircmt + "cmt_envground.txt", temutil::cmtcode2num(this->cmtcode), 26
   );
 
   // pop each line off the front of the list
@@ -425,7 +425,6 @@ void CohortLookup::assignEnv4Ground(string &dircmt) {
   temutil::pfll2data(datalist, snwalbmin);
   temutil::pfll2data(datalist, psimax);
   temutil::pfll2data(datalist, evapmin);
-  temutil::pfll2data(datalist, drainmax);
   temutil::pfll2data(datalist, rtdp4gdd);
   temutil::pfll2data(datalist, initsnwtem);
 

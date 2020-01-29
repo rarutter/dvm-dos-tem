@@ -185,9 +185,7 @@ struct soipar_env {
   double psimax;
   double evapmin;
 
-  double drainmax;
-  
-  soipar_env():rtdp4gdd(UIN_D), psimax(UIN_D), evapmin(UIN_D), drainmax(UIN_D){}
+  soipar_env():rtdp4gdd(UIN_D), psimax(UIN_D), evapmin(UIN_D) {}
 
 };
 
