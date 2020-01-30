@@ -133,6 +133,8 @@ public:
   double wfact; //A parameter determined by the distribution of the
                 // topographic index. Source: CLM3/Oleson 2004
 
+  double nfactor_summer;
+
   // inital thermal/water states of snow/soil
   double initsnwtem; //1 snow input: initial snow temperature
                      //  (note: initial water of snow can be from

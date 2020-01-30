@@ -186,8 +186,9 @@ struct soipar_env {
   double evapmin;
 
   double wfact;
+  double nfactor_summer;
 
-  soipar_env():rtdp4gdd(UIN_D), psimax(UIN_D), evapmin(UIN_D), wfact(UIN_D) {}
+  soipar_env():rtdp4gdd(UIN_D), psimax(UIN_D), evapmin(UIN_D), wfact(UIN_D), nfactor_summer(UIN_D) {}
 
 };
 
