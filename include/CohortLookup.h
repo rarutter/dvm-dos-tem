@@ -135,6 +135,8 @@ public:
 
   double nfactor_summer;
 
+  double ponding_max_mm; //max ponding (surface water storage) (mm)
+
   // inital thermal/water states of snow/soil
   double initsnwtem; //1 snow input: initial snow temperature
                      //  (note: initial water of snow can be from

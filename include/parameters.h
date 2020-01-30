@@ -187,8 +187,9 @@ struct soipar_env {
 
   double wfact;
   double nfactor_summer;
+  double ponding_max_mm; //max ponding (surface water storage) (mm)
 
-  soipar_env():rtdp4gdd(UIN_D), psimax(UIN_D), evapmin(UIN_D), wfact(UIN_D), nfactor_summer(UIN_D) {}
+  soipar_env():rtdp4gdd(UIN_D), psimax(UIN_D), evapmin(UIN_D), wfact(UIN_D), nfactor_summer(UIN_D), ponding_max_mm(UIN_D) {}
 
 };
 

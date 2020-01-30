@@ -8,6 +8,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -38,6 +39,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -68,6 +70,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -98,6 +101,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -128,6 +132,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -158,6 +163,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -189,6 +195,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -219,6 +226,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -249,6 +257,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -279,6 +288,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -309,6 +319,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
@@ -339,6 +350,7 @@
 0.08               // evapmin:
 0.75               // wfact: 
 1.5                // nfactor_summer:
+4.0                // ponding_max_mm:
 0.20               // rtdp4gdd: root depth for estimating growing degree day
 -1.0               // initsnwtem: initial snow temperature (oC)
 -1.0               // initts(0): initial soil temperature at 10 cm interval (oC)
