@@ -49,7 +49,7 @@ Cohort::Cohort(int y, int x, ModelData* modeldatapointer):
   } else {
     this->cd.cmttype = temutil::get_veg_class(modeldatapointer->veg_class_file, y, x);
   }
-  this->cd.drainage_type = temutil::get_drainage_class(modeldatapointer->drainage_file, y, x);
+  //this->cd.drainage_type = temutil::get_drainage_class(modeldatapointer->drainage_file, y, x);
   this->cd.cell_slope = temutil::get_scalar<double>(modeldatapointer->topo_file, "slope", y, x);
   this->cd.cell_aspect = temutil::get_scalar<double>(modeldatapointer->topo_file, "aspect", y, x);
   this->cd.cell_elevation = temutil::get_scalar<double>(modeldatapointer->topo_file, "elevation", y, x);

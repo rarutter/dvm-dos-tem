@@ -32,7 +32,7 @@ public:
   int yrsdist; // years since last disturbance
   int mthsdist; //months since last disturbance
   
-  int drainage_type;
+//  int drainage_type;
   double cell_slope;
   double cell_aspect;
   double cell_elevation;

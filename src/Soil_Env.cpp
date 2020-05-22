@@ -46,6 +46,7 @@ void Soil_Env::initializeParameter() {
   envpar.wfact = chtlu->wfact;
   envpar.nfactor_summer = chtlu->nfactor_summer;
   envpar.ponding_max_mm = chtlu->ponding_max_mm;
+  envpar.drainage = chtlu->drainage_factor;
   envpar.rtdp4gdd = chtlu->rtdp4gdd;
 };
 
@@ -606,7 +607,7 @@ void Soil_Env::updateDailySM(double weighted_veg_tran) {
   double baseflow = 1.0; // fraction of bottom drainage (free) into water system:
                          //  0 - 1 upon drainage condition
 
-  if(cd->drainage_type == 1) { // 0: well-drained; 1: poorly-drained
+  if(envpar.drainage >= 0.5) { // 0: well-drained; 1: poorly-drained
     baseflow = 0.0;
   }
 
