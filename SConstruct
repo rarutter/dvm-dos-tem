@@ -88,7 +88,7 @@ platform_library_path = []
 
 # By default, attempt to find g++. Will be overwritten later if necessary.
 compiler = distutils.spawn.find_executable('g++')
-print compiler
+print(compiler)
 
 # Determine platform and modify libraries and paths accordingly
 # This should only be general linux paths. Machine-specific paths
@@ -116,10 +116,10 @@ elif platform_name == 'Darwin':
  
   # See ua-snap/dvm-dos-tem PR #300 for discussion
   if(USEOMP):
-    print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-    print "NOTE: OpenMP not working on OSX! Reverting to serial build...."
-    print "%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
-    print ""
+    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    print("NOTE: OpenMP not working on OSX! Reverting to serial build....")
+    print("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%")
+    print("")
     USEOMP = False
 
   # On OSX, using Homebrew, alternate g++ versions are installed so as not
@@ -197,8 +197,8 @@ if(USEOMP):
 
 # Modify setup for MPI, if necessary
 if(USEMPI):
-  compiler = distutils.spawn.find_executable('mpicc')
-  print compiler
+  compiler = distutils.spawn.find_executable('mpic++')
+  print(compiler)
 
   # append src/parallel-code stuff to src_files and include_paths and libs
   #local_include_paths.append('src/parallel-code')
@@ -212,10 +212,10 @@ if(USEMPI):
 
 #VariantDir('scons_obj','src', duplicate=0)
 
-print "Compiler: " + compiler
+print("Compiler: " + compiler)
 
 GIT_SHA = subprocess.Popen('git describe --abbrev=6 --dirty --always --tags', stdout=subprocess.PIPE, shell=True).stdout.read().strip()
-compiler_flags += ' -DGIT_SHA=\\"' + GIT_SHA + '\\"'
+compiler_flags += ' -DGIT_SHA=\\"' + str(GIT_SHA) + '\\"'
 
 #Object compilation
 object_list = Object(src_files, CXX=compiler, CPPPATH=platform_include_path,
