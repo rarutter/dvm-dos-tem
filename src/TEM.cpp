@@ -748,12 +748,6 @@ void advance_model(const int rowidx, const int colidx,
     // Run model
     runner.run_years(0, modeldata.tr_yrs, "tr-run");
 
-    //This runs SC without a write to and reload from restart data.
-    //We hope to avoid a jump in the graphs at the TR-SC transition.
-    // Loading projected data instead of historic. FIX?
-    runner.cohort.load_proj_climate(modeldata.proj_climate_file);
-    runner.run_years(0, modeldata.sc_yrs, "sc-run");
-
     // Update restartdata structure from the running state
     runner.cohort.set_restartdata_from_state();
 
@@ -770,8 +764,7 @@ void advance_model(const int rowidx, const int colidx,
   }
 
   // SCENARIO STAGE (SC)
-  // Forcing this to not run, since we ran SC already in the TR block.
-  if (modeldata.sc_yrs > 0 && false) {
+  if (modeldata.sc_yrs > 0) {
     BOOST_LOG_NAMED_SCOPE("SC");
     BOOST_LOG_SEV(glg, fatal) << "Running Scenario, " << modeldata.sc_yrs << " years.";
 
