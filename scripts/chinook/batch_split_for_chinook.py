@@ -177,10 +177,12 @@ for batch in range(0, number_batches):
   #!/bin/bash -l
 
   #SBATCH --mail-user=rarutter@alaska.edu
+  #SBATCH --mail-type=BEGIN
   #SBATCH --mail-type=FAIL
+  #SBATCH --mail-type=END
 
   # Job name, for clarity
-  #SBATCH --job-name="ddt-batch-{0}"
+  #SBATCH --job-name="ddt-{0}"
 
   # Time limit
   #SBATCH --time=2:00:00
