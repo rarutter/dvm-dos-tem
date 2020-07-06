@@ -6,7 +6,7 @@
 # 2018
 
 
-OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/20200619_Toolik_mri_50x50"
+OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/20200627_Toolik_ncar_50x50"
 OUTPUT_SPEC_PATH="./config/202006_sample_regions_50x50_output_spec.csv"
 STAGES="eq sp tr sc"
 TIMESTEPS="daily monthly yearly"
