@@ -1279,7 +1279,7 @@ Setting up logging...
 [fatal] [SP] Running Spinup, 250 years.
 [fatal] [TR] Running Transient, 115 years
 [fatal] [SC] Running Scenario, 85 years.
-cell 25, 25 complete.421
+cell 25, 25 complete.420
 [fatal] [] Skipping cell (25, 26)
 [fatal] [] Skipping cell (25, 27)
 [fatal] [] Skipping cell (25, 28)
@@ -2504,4 +2504,4 @@ cell 25, 25 complete.421
 [fatal] [] Skipping cell (49, 47)
 [fatal] [] Skipping cell (49, 48)
 [fatal] [] Skipping cell (49, 49)
-Total Seconds: 422
+Total Seconds: 421
