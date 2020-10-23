@@ -7,7 +7,7 @@
     "parameter_dir":      "parameters/",
     "hist_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/historic-climate.nc",
     "proj_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/projected-climate.nc",
-    "veg_class_file":     "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/veg_new.nc",
+    "veg_class_file":     "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/vegetation.nc",
     "drainage_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/drainage.nc",
     "soil_texture_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/soil-texture.nc",
     "co2_file":           "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/co2.nc",
@@ -18,7 +18,7 @@
     "hist_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/historic-explicit-fire.nc",
     "proj_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/projected-explicit-fire.nc",
     "topo_file":          "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_Kougarok_b_50x50/topo.nc",
-    "output_dir":         "/center1/AKINTMDL/rarutter/20201005_Kougarok_b_ncar_50x50",
+    "output_dir":         "/center1/AKINTMDL/rarutter/20201015_Kougarok_b_ncar_50x50/",
     "output_spec_file":   "config/202006_sample_regions_50x50_output_spec.csv",
     "output_monthly":     1, //JSON specific
     "output_nc_eq":       0,
