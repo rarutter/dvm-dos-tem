@@ -530,6 +530,9 @@ void advance_model(const int rowidx, const int colidx,
 
   BOOST_LOG_SEV(glg, note) << "Running cell (" << rowidx << ", " << colidx << ")";
 
+  time_t am_stime, setuptime, prtime, eqtime, sptime, trtime, sctime;
+  am_stime = time(0);
+
   //modeldata.initmode = 1; // OBSOLETE?
 
   BOOST_LOG_SEV(glg, info) << "Setup the NEW STYLE RUNNER OBJECT ...";
@@ -546,7 +549,8 @@ void advance_model(const int rowidx, const int colidx,
   BOOST_LOG_SEV(glg, debug) << "right after initialize_internal_pointers() and initialize_state_parameters()"
                             << runner.cohort.ground.layer_report_string("depth ptr");
 
-
+  setuptime = time(0);
+  std::cout<<"post setup, pre-PR: "<<difftime(setuptime, am_stime)<<std::endl;
   // PRE RUN STAGE (PR)
   if (modeldata.pr_yrs > 0) {
     BOOST_LOG_NAMED_SCOPE("PRE-RUN");
@@ -597,6 +601,8 @@ void advance_model(const int rowidx, const int colidx,
 
   }
 
+  prtime = time(0);
+  std::cout<<"PR time: "<<difftime(prtime, setuptime)<<std::endl;
   // EQUILIBRIUM STAGE (EQ)
   if (modeldata.eq_yrs > 0) {
     BOOST_LOG_NAMED_SCOPE("EQ");
@@ -664,6 +670,8 @@ void advance_model(const int rowidx, const int colidx,
 
   }
 
+  eqtime = time(0);
+  std::cout<<"EQ time: "<<difftime(eqtime, prtime)<<std::endl;
   // SPINUP STAGE (SP)
   if (modeldata.sp_yrs > 0) {
     BOOST_LOG_NAMED_SCOPE("SP");
@@ -718,6 +726,8 @@ void advance_model(const int rowidx, const int colidx,
 
   }
 
+  sptime = time(0);
+  std::cout<<"SP time: "<<difftime(sptime, eqtime)<<std::endl;
   // TRANSIENT STAGE (TR)
   if (modeldata.tr_yrs > 0) {
     BOOST_LOG_NAMED_SCOPE("TR");
@@ -768,6 +778,8 @@ void advance_model(const int rowidx, const int colidx,
 
   }
 
+  trtime = time(0);
+  std::cout<<"TR time: "<<difftime(trtime, sptime)<<std::endl;
   // SCENARIO STAGE (SC)
   if (modeldata.sc_yrs > 0) {
     BOOST_LOG_NAMED_SCOPE("SC");
@@ -819,6 +831,9 @@ void advance_model(const int rowidx, const int colidx,
     }
 
   }
+
+  sctime = time(0);
+  std::cout<<"SC time: "<<difftime(sctime, trtime)<<std::endl;
 
   // NOTE: Could have an option to set some time constants based on
   //       some sizes/dimensions of the input driving data...
