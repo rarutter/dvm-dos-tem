@@ -6,8 +6,8 @@
 # 2018
 
 
-OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/20210109_test_YKD_w_ncar_50x50"
-OUTPUT_SPEC_PATH="./config/output_spec.csv"
+OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/20210113_Kougarok_b_ncar_50x50"
+OUTPUT_SPEC_PATH="./config/202012_sample_regions_50x50_output_spec.csv"
 STAGES="eq sp tr sc"
 TIMESTEPS="daily monthly yearly"
 BATCH_DIR="${OUTPUT_DIR_PREFIX}/batch-run"
