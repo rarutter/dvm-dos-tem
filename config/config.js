@@ -18,8 +18,8 @@
     "hist_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_YKD_w_50x50/historic-explicit-fire.nc",
     "proj_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_YKD_w_50x50/projected-explicit-fire.nc",
     "topo_file":          "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_YKD_w_50x50/topo.nc",
-    "output_dir":         "/center1/AKINTMDL/rarutter/20210106_YKD_w_ncar_50x50/",
-    "output_spec_file":   "config/202012_sample_regions_50x50_output_spec.csv",
+    "output_dir":         "/center1/AKINTMDL/rarutter/20210109_test_YKD_w_ncar_50x50/",
+    "output_spec_file":   "config/output_spec.csv",
     "output_monthly":     1, //JSON specific
     "output_nc_eq":       0,
     "output_nc_sp":       0,
