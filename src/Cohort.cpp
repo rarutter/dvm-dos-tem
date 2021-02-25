@@ -1408,6 +1408,7 @@ void Cohort::set_restartdata_from_state() {
       for (int i = 0; i < NUM_PFT_PART; i++) {
         restartdata.vegc[i][ip] = bd[ip].m_vegs.c[i];  // - 'vegs_bgc'
         restartdata.strn[i][ip] = bd[ip].m_vegs.strn[i];
+        restartdata.vegC2N[i][ip] = vegbgc[ip].bgcpar.c2neven[i];
       }
 
       restartdata.labn[ip]         = bd[ip].m_vegs.labn;
@@ -1415,6 +1416,7 @@ void Cohort::set_restartdata_from_state() {
       restartdata.deadn[ip]        = bd[ip].m_vegs.deadn;
       restartdata.eetmx[ip]        = cd.m_vegd.eetmx[ip];
       restartdata.topt[ip]         = cd.m_vegd.topt[ip];
+      restartdata.unnormleaf[ip]   = cd.m_vegd.unnormleaf[ip];
       restartdata.unnormleafmx[ip] = cd.m_vegd.unnormleafmx[ip];
       restartdata.growingttime[ip] = cd.m_vegd.growingttime[ip];
 
