@@ -48,7 +48,7 @@ import netCDF4 as nc    # for handling netcdf files
 
 
 # USER SHOULD SET THIS VALUE
-IDEAL_CELLS_PER_BATCH = 25 
+IDEAL_CELLS_PER_BATCH = 60 
 
 
 # Look in the config file to figure out where the full-domain runmask is.
@@ -206,7 +206,7 @@ for batch in range(0, number_batches):
   module load slurm
   source ~/dvm-dos-tem/env-setup-scripts/setup-env-for-chinook.sh
 
-  mpirun ./dvmdostem -f {2}/batch-{0}/config.js -l disabled --max-output-volume=-1 -p 100 -e 1000 -s 250 -t 115 -n 85 
+  mpirun ./dvmdostem -f {2}/batch-{0}/config.js -l disabled --max-output-volume=-1 -p 100 -e 1000 -s 250 -t 0 -n 0 
 
   '''.format(batch, cells_in_batch, work_dir))
   print "Writing sbatch script for batch {}".format(batch)
