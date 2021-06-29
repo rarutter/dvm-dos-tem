@@ -21,6 +21,8 @@ libs = Split("""jsoncpp
                 boost_filesystem
                 boost_program_options
                 boost_thread
+                boost_mpi
+                boost_serialization
                 boost_log
                 lapacke
                 lapack
@@ -89,7 +91,12 @@ compiler = distutils.spawn.find_executable('g++')
 print(compiler)
 
 # Determine platform and modify libraries and paths accordingly
+# This should only be general linux paths. Machine-specific paths
+#   are added below.
 if platform_name == 'Linux':
+  homedir = os.path.expanduser('~')
+  print("homedir: " + homedir)
+  print(comp_name)
   platform_include_path = ['/home/UA/rarutter/downloads/hdf5-1.8.19/hdf5/include',
                            '/home/UA/rarutter/downloads/netcdf-4.4.1.1/netcdf/include',
                            '/usr/include',
@@ -99,7 +106,7 @@ if platform_name == 'Linux':
                            '/home/vagrant/netcdf-4.4.1.1/netcdf/include',
                            '~/usr/local/include']
 
-  platform_library_path = ['/home/vagrant/netcdf-4.4.1.1/netcdf/lib', '/home/vagrant/hdf5-1.8.19/hdf5/lib', '/home/UA/rarutter/downloads/netcdf-4.4.1.1/netcdf/lib', '/home/UA/rarutter/downloads/hdf5-1.8.19/hdf5/lib', '/usr/lib64', '~/usr/local/lib']
+  platform_library_path = ['/u1/uaf/rarutter/custom_software/boost_1_55_0/lib', '/home/vagrant/netcdf-4.4.1.1/netcdf/lib', '/home/vagrant/hdf5-1.8.19/hdf5/lib', '/home/UA/rarutter/downloads/netcdf-4.4.1.1/netcdf/lib', '/home/UA/rarutter/downloads/hdf5-1.8.19/hdf5/lib', '/usr/lib64', '~/usr/local/lib']
 
   compiler_flags = '-Wno-error -ansi -g -fPIC -std=c++11 -DBOOST_ALL_DYN_LINK -DBOOST_NO_CXX11_SCOPED_ENUMS -DGNU_FPE'
   platform_libs = libs
@@ -149,6 +156,27 @@ if comp_name == 'aeshna':
   platform_include_path.append('/home/tobey/usr/local/include')
   platform_library_path.append('/home/tobey/usr/local/lib')
 
+
+if 'chinook' in comp_name:
+  compiler_flags = compiler_flags.replace('c++11', 'c++0x')
+
+  platform_libs[:] = [lib for lib in platform_libs if not lib == 'jsoncpp']
+  platform_libs.append('json_linux-gcc-4.4.7_libmt')
+
+  platform_include_path.insert(0, homedir + '/custom_software/openmpi-3.0.0/include')
+  platform_include_path.insert(0, homedir + '/custom_software/jsoncpp/include')
+  platform_include_path.insert(0, homedir + '/custom_software/boost_1_55_0/include')
+  platform_include_path.insert(0, homedir + '/custom_software/netcdf-4.4.1.1/netcdf/include')
+  platform_include_path.insert(0, homedir + '/custom_software/lapack-3.8.0/LAPACKE/include')
+
+  platform_library_path.insert(0, homedir + '/custom_software/jsoncpp/libs/linux-gcc-4.4.7')
+  platform_library_path.insert(0, homedir + '/custom_software/boost_1_55_0/lib')
+  platform_library_path.insert(0, homedir + '/custom_software/hdf5-1.8.19/hdf5/lib')
+  platform_library_path.insert(0, homedir + '/custom_software/netcdf-4.4.1.1/netcdf/lib')
+  platform_library_path.insert(0, homedir + '/custom_software/openmpi-3.0.0/lib')
+  platform_library_path.insert(0, homedir + '/custom_software/lapack-3.8.0')
+
+
 if comp_name == 'atlas.snap.uaf.edu':
   platform_libs[:] = [lib for lib in platform_libs if not lib == 'jsoncpp']
   platform_libs.append('json_linux-gcc-4.4.7_libmt')
@@ -177,8 +205,9 @@ if(USEMPI):
 
   compiler_flags = compiler_flags + ' -m64 -DWITHMPI'
 
-  libs.append(Split("""mpi_cxx
-                       mpi"""))
+#  libs.append(Split("""mpi_cxx
+#                       mpi"""))
+  libs.append("mpi")
 
 
 #VariantDir('scons_obj','src', duplicate=0)

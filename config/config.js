@@ -1,28 +1,28 @@
 {
   "general": {
-    "run_name": "A sample dvmdostem run. Modify this text to suit your needs."
+    "run_name": "Four basins 150x277 ncar"
   },
 
   "IO": {
     "parameter_dir":      "parameters/",
-    "hist_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/historic-climate.nc",
-    "proj_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/projected-climate.nc",
-    "veg_class_file":     "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/vegetation.nc",
-    "drainage_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/drainage.nc",
-    "soil_texture_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/soil-texture.nc",
-    "co2_file":           "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/co2.nc",
-    "proj_co2_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/projected-co2.nc",
-    "runmask_file":       "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/run-mask.nc",
-    "topo_file":          "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/topo.nc",
-    "fri_fire_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/fri-fire.nc",
-    "hist_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/historic-explicit-fire.nc",
-    "proj_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/projected-explicit-fire.nc",
-    "topo_file":          "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_toolik_field_station_10x10/topo.nc",
-    "output_dir":         "output/",
-    "output_spec_file":   "config/output_spec.csv",
+    "hist_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/historic-climate.nc",
+    "proj_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/projected-climate.nc",
+    "veg_class_file":     "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/vegetation.nc",
+    "drainage_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/drainage.nc",
+    "soil_texture_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/soil-texture.nc",
+    "co2_file":           "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/co2.nc",
+    "proj_co2_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/projected-co2.nc",
+    "runmask_file":       "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/run-mask.nc",
+    "topo_file":          "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/topo.nc",
+    "fri_fire_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/fri-fire.nc",
+    "hist_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/historic-explicit-fire.nc",
+    "proj_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/projected-explicit-fire.nc",
+    "topo_file":          "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/topo.nc",
+    "output_dir":         "/center1/AKINTMDL/rarutter/20210302_four_basins_ncar_trsc_150x277/",
+    "output_spec_file":   "config/202102_four_basins_output_spec.csv",
     "output_monthly":     1, //JSON specific
     "output_nc_eq":       0,
-    "output_nc_sp":       1,
+    "output_nc_sp":       0,
     "output_nc_tr":       1,
     "output_nc_sc":       1, 
     "output_interval":    1 

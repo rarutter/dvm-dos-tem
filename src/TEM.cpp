@@ -213,8 +213,13 @@ int main(int argc, char* argv[]){
   // are currently unnecessary.
   MPI_Init(NULL, NULL);
 
-  int id = MPI::COMM_WORLD.Get_rank();
-  int ntasks = MPI::COMM_WORLD.Get_size();
+  int id, ntasks;
+
+  MPI_Comm_rank(MPI_COMM_WORLD, &id);
+  MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+
+  //int id = MPI::COMM_WORLD.Get_rank();
+  //int ntasks = MPI::COMM_WORLD.Get_size();
 #else
   //
   int id = 0;
@@ -228,7 +233,7 @@ int main(int argc, char* argv[]){
     BOOST_LOG_SEV(glg, info) << "Checking for output directory: "<<modeldata.output_dir;
     boost::filesystem::path out_dir_path(modeldata.output_dir);
     if( boost::filesystem::exists(out_dir_path) ){
-      if (args->get_no_output_cleanup()) {
+      if (args->get_no_output_cleanup() || args->get_restart_run()) {
         BOOST_LOG_SEV(glg, warn) << "WARNING!! Not cleaning up output directory! "
                                  << "Old and potentially confusing files may be "
                                  << "present from previous runs!!";
@@ -240,35 +245,45 @@ int main(int argc, char* argv[]){
     BOOST_LOG_SEV(glg, info) << "Creating output directory: "<<modeldata.output_dir;
     boost::filesystem::create_directories(out_dir_path);
 
-    // Create empty restart files for all stages based on size of run mask
-//    BOOST_LOG_SEV(glg, info) << "Creating empty restart files.";
-//    RestartData::create_empty_file(eq_restart_fname, num_rows, num_cols);
-//    RestartData::create_empty_file(sp_restart_fname, num_rows, num_cols);
-//    RestartData::create_empty_file(tr_restart_fname, num_rows, num_cols);
-//    RestartData::create_empty_file(sc_restart_fname, num_rows, num_cols);
-
 #ifdef WITHMPI
 
-    MPI_Barrier(MPI::COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
   } // End of single-process setup
   else{
     // Block all processes until process 0 has completed output
     // directory setup.
-    MPI_Barrier(MPI::COMM_WORLD);
+    MPI_Barrier(MPI_COMM_WORLD);
   }
 #else
   } // Nothing to do; only one process, id will equal 0.
 #endif
 
-  // Creating empty restart files for all stages.
-  // Attempting to restrict this to one process (in the conditional
+  // Attempting to restrict file creation to one process (in the conditional
   // statements above) causes a silent hang in nc_create_par(...)
-  BOOST_LOG_SEV(glg, info) << "Creating empty restart files.";
-  RestartData::create_empty_file(pr_restart_fname, num_rows, num_cols);
-  RestartData::create_empty_file(eq_restart_fname, num_rows, num_cols);
-  RestartData::create_empty_file(sp_restart_fname, num_rows, num_cols);
-  RestartData::create_empty_file(tr_restart_fname, num_rows, num_cols);
-  RestartData::create_empty_file(sc_restart_fname, num_rows, num_cols);
+
+  // Creating empty restart files for stages that will be run.
+  //  This avoids overwriting any restart files that might be in use.
+  BOOST_LOG_SEV(glg, info) << "Creating restart files for stages to be run";
+  if(args->get_pr_yrs() > 0){
+    BOOST_LOG_SEV(glg, info) << "Creating empty PR restart file";
+    RestartData::create_empty_file(pr_restart_fname, num_rows, num_cols);
+  }
+  if(args->get_eq_yrs() > 0){
+    BOOST_LOG_SEV(glg, info) << "Creating empty EQ restart file";
+    RestartData::create_empty_file(eq_restart_fname, num_rows, num_cols);
+  }
+  if(args->get_sp_yrs() > 0){
+    BOOST_LOG_SEV(glg, info) << "Creating empty SP restart file";
+    RestartData::create_empty_file(sp_restart_fname, num_rows, num_cols);
+  }
+  if(args->get_tr_yrs() > 0){
+    BOOST_LOG_SEV(glg, info) << "Creating empty TR restart file";
+    RestartData::create_empty_file(tr_restart_fname, num_rows, num_cols);
+  }
+  if(args->get_sc_yrs() > 0){
+    BOOST_LOG_SEV(glg, info) << "Creating empty SC restart file";
+    RestartData::create_empty_file(sc_restart_fname, num_rows, num_cols);
+  }
 
   // Create empty run status file
   BOOST_LOG_SEV(glg, info) << "Creating empty run status file.";
@@ -372,8 +387,13 @@ int main(int argc, char* argv[]){
 #ifdef WITHMPI
     BOOST_LOG_SEV(glg, info) << "Beginning MPI parallel section";
 
-    int id = MPI::COMM_WORLD.Get_rank();
-    int ntasks = MPI::COMM_WORLD.Get_size();
+    int id, ntasks;
+
+    MPI_Comm_rank(MPI_COMM_WORLD, &id);
+    MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+
+    //int id = MPI::COMM_WORLD.Get_rank();
+    //int ntasks = MPI::COMM_WORLD.Get_size();
 
     int total_cells = num_rows*num_cols;
 
@@ -866,8 +886,12 @@ void create_empty_run_status_file(const std::string& fname,
 
 #ifdef WITHMPI
 
-  int id = MPI::COMM_WORLD.Get_rank();
-  int ntasks = MPI::COMM_WORLD.Get_size();
+  int id, ntasks;
+  MPI_Comm_rank(MPI_COMM_WORLD, &id);
+  MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+
+  //int id = MPI::COMM_WORLD.Get_rank();
+  //int ntasks = MPI::COMM_WORLD.Get_size();
 
                             // path            c mode               mpi comm obj     mpi info netcdfid
   temutil::nc( nc_create_par(fname.c_str(), NC_CLOBBER|NC_NETCDF4|NC_MPIIO, MPI_COMM_WORLD, MPI_INFO_NULL, &ncid) );
@@ -931,8 +955,12 @@ void write_status(const std::string fname, int row, int col, int statusCode) {
 #ifdef WITHMPI
 
   // These are for logging identification only.
-  int id = MPI::COMM_WORLD.Get_rank();
-  int ntasks = MPI::COMM_WORLD.Get_size();
+  int id, ntasks;
+  MPI_Comm_rank(MPI_COMM_WORLD, &id);
+  MPI_Comm_size(MPI_COMM_WORLD, &ntasks);
+
+  //int id = MPI::COMM_WORLD.Get_rank();
+  //int ntasks = MPI::COMM_WORLD.Get_size();
 
   // Open dataset
   temutil::nc( nc_open_par(fname.c_str(), NC_WRITE|NC_MPIIO, MPI_COMM_SELF, MPI_INFO_NULL, &ncid) );
