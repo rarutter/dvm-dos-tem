@@ -44,7 +44,7 @@ def sum_monthly_flux_to_yearly(data):
   if (data.shape[0] % 12) != 0:
     raise RuntimeError('data size for dimension 0 (time) must be an even multiple of 12')
 
-  newshape = [data.shape[0]/12]
+  newshape = [data.shape[0] // 12]
   for i in data.shape[1:]:
     newshape.append(i)
 
@@ -142,10 +142,10 @@ def average_monthly_pool_to_yearly(data):
     raise RuntimeError('data input parameter must be a numpy masked array!')
 
   original_dims = list(data.shape)
-  new_time = original_dims[0] / 12
+  new_time = original_dims[0] // 12
   new_dims = original_dims
   new_dims[0] = new_time
-
+  new_dims = [round(x) for x in new_dims]
   output = np.ones(new_dims) * np.nan
   for i in range(0, new_time):
     yr_start = i * 12
@@ -326,6 +326,18 @@ def plot_basic_timeseries(vars2plot, spatial_y, spatial_x, time_resolution, stag
   Make a basic timeseries plot, one subplot per variable.
 
   Not sure yet how should handle summarizing over layers, pfts, etc.
+
+  Assembles expected file name for data based on args. i.e. GPP_monthly_eq.nc
+  Raises FileNotFoundError if files does not exist.
+
+  Parameters
+  ----------
+  vars2plot : list of variable names
+  spatial_y : pixel coordinates to plot i.e. 0
+  spatial_x : pixel coordinates to plot i.e. 0
+  time_resolution : str, 'yearly', 'monthly', or 'daily'
+  stages: list of stages to plot e.g. ['eq', 'sp', 'tr', 'sc']
+  folder: str, path to directory with output data files
   '''
 
   ROWS = len(vars2plot)
@@ -339,7 +351,9 @@ def plot_basic_timeseries(vars2plot, spatial_y, spatial_x, time_resolution, stag
     ax.plot(data[:,spatial_y, spatial_x], label=var)
     ax.set_ylabel = units
 
+  plt.savefig("plot_basic_timeseries.png")
   plt.show()
+
 
 
 
