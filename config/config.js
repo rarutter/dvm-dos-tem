@@ -1,25 +1,25 @@
 {
   "general": {
-    "run_name": "Four basins 150x277 ncar"
+    "run_name": "Salcha basin 105x137 noSC"
   },
 
   "IO": {
     "parameter_dir":      "parameters/",
-    "hist_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/historic-climate.nc",
-    "proj_climate_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/projected-climate.nc",
-    "veg_class_file":     "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/vegetation.nc",
-    "drainage_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/drainage.nc",
-    "soil_texture_file":  "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/soil-texture.nc",
-    "co2_file":           "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/co2.nc",
-    "proj_co2_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/projected-co2.nc",
-    "runmask_file":       "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/run-mask.nc",
-    "topo_file":          "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/topo.nc",
-    "fri_fire_file":      "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/fri-fire.nc",
-    "hist_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/historic-explicit-fire.nc",
-    "proj_exp_fire_file": "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/projected-explicit-fire.nc",
-    "topo_file":          "demo-data/cru-ts40_ar5_rcp85_ncar-ccsm4_all_four_basins_150x277/topo.nc",
-    "output_dir":         "/center1/AKINTMDL/rarutter/20210302_four_basins_ncar_trsc_150x277/",
-    "output_spec_file":   "config/202102_four_basins_output_spec.csv",
+    "hist_climate_file":  "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/historic-climate.nc",
+    "proj_climate_file":  "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/projected-climate.nc",
+    "veg_class_file":     "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/vegetation.nc",
+    "drainage_file":      "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/drainage.nc",
+    "soil_texture_file":  "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/soil-texture.nc",
+    "co2_file":           "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/co2.nc",
+    "proj_co2_file":      "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/projected-co2.nc",
+    "runmask_file":       "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/run-mask.nc",
+    "topo_file":          "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/topo.nc",
+    "fri_fire_file":      "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/fri-fire.nc",
+    "hist_exp_fire_file": "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/historic-explicit-fire.nc",
+    "proj_exp_fire_file": "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/projected-explicit-fire.nc",
+    "topo_file":          "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_gfdl-cm3_Salcha_basin_105x137/topo.nc",
+    "output_dir":         "/center1/AKINTMDL/rarutter/20220221_Salcha_basin_noSC_105x137/",
+    "output_spec_file":   "config/20220117_4Basins_output.csv",
     "output_monthly":     1, //JSON specific
     "output_nc_eq":       0,
     "output_nc_sp":       0,
