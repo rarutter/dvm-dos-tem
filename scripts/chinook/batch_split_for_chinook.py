@@ -48,7 +48,7 @@ import netCDF4 as nc    # for handling netcdf files
 
 
 # USER SHOULD SET THIS VALUE
-IDEAL_CELLS_PER_BATCH = 60 
+IDEAL_CELLS_PER_BATCH = 25
 
 
 # Look in the config file to figure out where the full-domain runmask is.
@@ -184,10 +184,10 @@ for batch in range(0, number_batches):
   #SBATCH --mail-type=END
 
   # Job name, for clarity
-  #SBATCH --job-name="ddt-{0}"
+  #SBATCH --job-name="MO-TRSC-ncar-{0}"
 
   # Time limit
-  #SBATCH --time=4:00:00
+  #SBATCH --time=0:45:00
 
   # Partition specification
   #SBATCH -p t1standard 
