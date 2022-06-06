@@ -1,6 +1,6 @@
 {
   "general": {
-    "run_name": "Moose basin 29x36 TR->SC ncar"
+    "run_name": "Moose basin 29x36 SC ncar"
   },
 
   "IO": {
@@ -18,7 +18,7 @@
     "hist_exp_fire_file": "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/historic-explicit-fire.nc",
     "proj_exp_fire_file": "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/projected-explicit-fire.nc",
     "topo_file":          "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/topo.nc",
-    "output_dir":         "/center1/AKINTMDL/rarutter/20220527_Moose_basin_ncar_29x36_TRSC/",
+    "output_dir":         "/center1/AKINTMDL/rarutter/20220606_Moose_basin_ncar_29x36_SC/",
     "output_spec_file":   "config/20220117_4Basins_output.csv",
     "output_monthly":     1, //JSON specific
     "output_nc_eq":       0,
