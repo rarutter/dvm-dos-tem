@@ -72,7 +72,7 @@ with nc.Dataset(BASE_RUNMASK, 'r') as runmask:
   padded_cell_count = last_cell_index + 1
 
 #nbatches = padded_cell_count / IDEAL_CELLS_PER_BATCH
-nbatches = TOTAL_CELLS_TO_RUN / IDEAL_CELLS_PER_BATCH
+nbatches = TOTAL_CELLS_TO_RUN // IDEAL_CELLS_PER_BATCH
 # If there are extra cells, or fewer cells than IDEAL_CELLS_PER_BATCH
 #if (padded_cell_count % IDEAL_CELLS_PER_BATCH != 0):
 if (TOTAL_CELLS_TO_RUN % IDEAL_CELLS_PER_BATCH != 0):
@@ -127,7 +127,7 @@ with nc.Dataset(BASE_RUNMASK, 'r') as runmask:
 print("Turning on pixels in each batch's run mask...")
 batch = 0
 cells_in_sublist = 0
-coord_list = zip(nz_ycoords, nz_xcoords)
+coord_list = list(zip(nz_ycoords, nz_xcoords))
 for i, cell in enumerate(coord_list):
 
   with nc.Dataset(work_dir + "/batch-{}/run-mask.nc".format(batch), 'a') as grp_runmask:
