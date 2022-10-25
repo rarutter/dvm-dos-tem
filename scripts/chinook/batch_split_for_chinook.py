@@ -184,10 +184,10 @@ for batch in range(0, number_batches):
   #SBATCH --mail-type=END
 
   # Job name, for clarity
-  #SBATCH --job-name="MO-SC-ncar-{0}"
+  #SBATCH --job-name="Chena-full-ncar-{0}"
 
   # Time limit
-  #SBATCH --time=0:45:00
+  #SBATCH --time=1:30:00
 
   # Partition specification
   #SBATCH -p t1standard 
@@ -206,7 +206,7 @@ for batch in range(0, number_batches):
   module load slurm
   source ~/dvm-dos-tem/env-setup-scripts/setup-env-for-chinook.sh
 
-  mpirun ./dvmdostem -f {2}/batch-{0}/config.js -l disabled --max-output-volume=-1 --no-output-cleanup --restart-run -p 0 -e 0 -s 0 -t 0 -n 85
+  mpirun ./dvmdostem -f {2}/batch-{0}/config.js -l disabled --max-output-volume=-1 -p 100 -e 1000 -s 250 -t 115 -n 85
 
   '''.format(batch, cells_in_batch, work_dir))
   print("Writing sbatch script for batch {}".format(batch))

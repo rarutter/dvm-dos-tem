@@ -1,24 +1,24 @@
 {
   "general": {
-    "run_name": "Moose basin 29x36 SC ncar"
+    "run_name": "Chena Basin 74x160 PR->SC ncar"
   },
 
   "IO": {
     "parameter_dir":      "parameters/",
-    "hist_climate_file":  "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/historic-climate.nc",
-    "proj_climate_file":  "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/projected-climate.nc",
-    "veg_class_file":     "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/vegetation.nc",
-    "drainage_file":      "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/drainage.nc",
-    "soil_texture_file":  "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/soil-texture.nc",
-    "co2_file":           "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/co2.nc",
-    "proj_co2_file":      "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/projected-co2.nc",
-    "runmask_file":       "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/run-mask.nc",
-    "topo_file":          "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/topo.nc",
-    "fri_fire_file":      "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/fri-fire.nc",
-    "hist_exp_fire_file": "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/historic-explicit-fire.nc",
-    "proj_exp_fire_file": "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/projected-explicit-fire.nc",
-    "topo_file":          "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_moose_basin_29x36/topo.nc",
-    "output_dir":         "/center1/AKINTMDL/rarutter/20220606_Moose_basin_ncar_29x36_SC/",
+    "hist_climate_file":  "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/historic-climate.nc",
+    "proj_climate_file":  "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/projected-climate.nc",
+    "veg_class_file":     "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/vegetation.nc",
+    "drainage_file":      "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/drainage.nc",
+    "soil_texture_file":  "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/soil-texture.nc",
+    "co2_file":           "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/co2.nc",
+    "proj_co2_file":      "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/projected-co2.nc",
+    "runmask_file":       "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/run-mask.nc",
+    "topo_file":          "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/topo.nc",
+    "fri_fire_file":      "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/fri-fire.nc",
+    "hist_exp_fire_file": "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/historic-explicit-fire.nc",
+    "proj_exp_fire_file": "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/projected-explicit-fire.nc",
+    "topo_file":          "/home/rarutter/ddt_inputs/cru-ts40_ar5_rcp85_ncar-ccsm4_Chena_basin_74x160/topo.nc",
+    "output_dir":         "/center1/AKINTMDL/rarutter/20221011_Chena_74x160_PESTN_ar5_rcp85_ncar-ccsm4/",
     "output_spec_file":   "config/20220117_4Basins_output.csv",
     "output_monthly":     1, //JSON specific
     "output_nc_eq":       0,

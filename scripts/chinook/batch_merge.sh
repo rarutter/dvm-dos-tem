@@ -6,15 +6,15 @@
 # 2018
 
 
-OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/20210113_Kougarok_b_ncar_50x50"
-OUTPUT_SPEC_PATH="./config/202012_sample_regions_50x50_output_spec.csv"
+OUTPUT_DIR_PREFIX="/center1/AKINTMDL/rarutter/20221011_Chena_74x160_PESTN_ar5_rcp85_ncar-ccsm4/"
+OUTPUT_SPEC_PATH="./config/20220117_4Basins_output.csv"
 STAGES="eq sp tr sc"
 RES_STAGES="pr eq sp tr sc"
 TIMESTEPS="daily monthly yearly"
-BATCH_DIR="${OUTPUT_DIR_PREFIX}/batch-run"
-FINAL_DIR="${OUTPUT_DIR_PREFIX}/all-merged"
+BATCH_DIR="${OUTPUT_DIR_PREFIX}/batch-run/"
+FINAL_DIR="${OUTPUT_DIR_PREFIX}/first_round_merged"
 
-mkdir -p "${OUTPUT_DIR_PREFIX}/all-merged"
+mkdir -p "${OUTPUT_DIR_PREFIX}/first_round_merged"
 
 variables=$(cat $OUTPUT_SPEC_PATH | cut -d, -f1)
 
