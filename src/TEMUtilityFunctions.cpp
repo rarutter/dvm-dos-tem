@@ -659,6 +659,56 @@ namespace temutil {
     return start_year;
   }
 
+  /** Returns the timestep interval of a timeseries netcdf file.
+  *
+  *   Interval is calculated only from the first two entries
+  *   of the time variable.
+  */
+  std::string get_timestep_interval(const std::string& fname){
+    BOOST_LOG_SEV(glg, debug) << "Determining timestep interval for file " << fname;
+
+    int ncid;
+    temutil::nc( nc_open(fname.c_str(), NC_NOWRITE, &ncid) );
+
+    int timeV;
+    temutil::nc( nc_inq_varid(ncid, "time", &timeV) );
+
+    size_t start[3];
+    start[0] = 0; //Starting timestep
+    start[1] = 0; //y forced to 0
+    start[2] = 0; //x forced to 0
+
+    size_t count[3];
+    count[0] = 2; //Only two timesteps
+    count[1] = 1; //single cell
+    count[2] = 1; //single cell
+
+    int timeData[2];
+    temutil::nc( nc_get_vara_int(ncid, timeV, start, count, timeData) );
+
+    int time_interval = timeData[1] - timeData[0];
+    std::string interval_str = "";
+
+    if(time_interval == 1){
+      // Input is presumed to be daily
+      BOOST_LOG_SEV(glg, debug) << "Timestep interval is daily";
+      interval_str = "day";
+    }
+    else if(27 < time_interval && time_interval < 32){
+      // Input is presumed to be monthly
+      BOOST_LOG_SEV(glg, debug) << "Timestep interval is monthly";
+      interval_str = "month";
+    }
+    else{
+      // Input is yearly (not handled) or erroneous
+      BOOST_LOG_SEV(glg, fatal) << "Input file time interval does not indicate daily or monthly input: " << time_interval;
+    }
+
+    temutil::nc( nc_close(ncid) );
+
+    return interval_str;
+  }
+
   /** rough draft - look up lon/lat in nc file from y,x coordinates. 
       Assumes that the file has some coordinate dimensions...
   */
