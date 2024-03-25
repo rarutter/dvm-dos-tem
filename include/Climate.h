@@ -11,9 +11,10 @@ public:
   Climate(const std::string& fname, const std::string& co2fname, int y, int x);
 
   // misc climate variables
-  // This value will change during a run when switching from
+  // Start year will change during a run when switching from
   //  historic to projected climate data
   int tseries_start_year;
+  std::string driving_timestep;
 
   // driving variables
   std::vector<float> co2;
@@ -42,10 +43,12 @@ public:
   // Daily containers
 
   // this is not really a daily value, but for scope/access
-  // reasons it is easier to treat it as such. Every day of the year has the same co2 value...
+  // reasons it is easier to treat it as such. Every day of the year
+  // has the same co2 value...
   float co2_d;
 
-  //  ->> should be interpolated from the monthly containers
+  // If daily input is provided these are the primary arrays,
+  //  otherwise they are interpolated from the monthly containers
   std::vector<float> tair_d;
   std::vector<float> prec_d;
   std::vector<float> nirr_d;
@@ -65,8 +68,9 @@ public:
   std::vector<float> abshd_d;
   
   std::vector<float> monthly2daily(const std::vector<float>& mly_vals);
+  std::vector<float> daily2monthly(std::vector<float>& dly_vals, std::string avg_or_sum);
 
-  void prepare_eq_daily_driving_data(int iy, const std::string& stage);
+//Unused:  void prepare_eq_daily_driving_data(int iy, const std::string& stage);
   void prepare_daily_driving_data(int, const std::string&);
 
   void monthlycontainers2log();

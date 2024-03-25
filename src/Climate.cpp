@@ -385,6 +385,10 @@ Climate::Climate(const std::string& fname, const std::string& co2fname, int y, i
   }
 }
 
+
+/** Loads primary driving data variables from file, and if they are
+ *   daily calculates the monthly versions.
+ */
 void Climate::load_from_file(const std::string& fname, int y, int x) {
 
   if(!boost::filesystem::exists(fname)){
@@ -393,16 +397,33 @@ void Climate::load_from_file(const std::string& fname, int y, int x) {
 
   #pragma omp critical(load_input)
   {
+    driving_timestep = temutil::get_timestep_interval(fname);
+
     BOOST_LOG_SEV(glg, info) << "Loading climate from file: " << fname;
     BOOST_LOG_SEV(glg, info) << "Loading climate for (y, x) point: "
                              << "(" << y <<","<< x <<"), all timesteps.";
 
     BOOST_LOG_SEV(glg, info) << "Read in the base climate data timeseries ...";
 
-    tair = temutil::get_timeseries<float>(fname, "tair", y, x);
-    vapo = temutil::get_timeseries<float>(fname, "vapor_press", y, x);
-    prec = temutil::get_timeseries<float>(fname, "precip", y, x);
-    nirr = temutil::get_timeseries<float>(fname, "nirr", y, x);
+    if(driving_timestep == "day"){
+      tair_d = temutil::get_timeseries<float>(fname, "tair", y, x);
+      vapo_d = temutil::get_timeseries<float>(fname, "vapor_press", y, x);
+      prec_d = temutil::get_timeseries<float>(fname, "precip", y, x);
+      nirr_d = temutil::get_timeseries<float>(fname, "nirr", y, x);
+
+      //Only uncomment these if you really need to check daily inputs.
+      //They produce a non-useful amount of logging otherwise.
+      //BOOST_LOG_SEV(glg, debug) << "tair_d = [" << temutil::vec2csv(tair_d) << "]";
+      //BOOST_LOG_SEV(glg, debug) << "vapo_d = [" << temutil::vec2csv(vapo_d) << "]";
+      //BOOST_LOG_SEV(glg, debug) << "prec_d = [" << temutil::vec2csv(prec_d) << "]";
+      //BOOST_LOG_SEV(glg, debug) << "nirr_d = [" << temutil::vec2csv(nirr_d) << "]";
+    }
+    else if(driving_timestep == "month"){
+      tair = temutil::get_timeseries<float>(fname, "tair", y, x);
+      vapo = temutil::get_timeseries<float>(fname, "vapor_press", y, x);
+      prec = temutil::get_timeseries<float>(fname, "precip", y, x);
+      nirr = temutil::get_timeseries<float>(fname, "nirr", y, x);
+    }
 
     tseries_start_year = temutil::get_timeseries_start_year(fname);
 
@@ -420,7 +441,15 @@ void Climate::load_from_file(const std::string& fname, int y, int x) {
     BOOST_LOG_SEV(glg, err) << "ERROR - your base climate datasets are not "
                             << "the same size! Very little bounds checking "
                             << "done, not sure what will happen.";
+  }
 
+  if(driving_timestep == "day"){
+    //Prepare monthly averaged or summed versions of the daily
+    // input for the processes and functions that assume monthly.
+    tair = daily2monthly(tair_d, "avg");
+    vapo = daily2monthly(vapo_d, "avg");
+    prec = daily2monthly(prec_d, "sum");
+    nirr = daily2monthly(nirr_d, "avg");
   }
 
   // make some space for the derived variables
@@ -485,9 +514,13 @@ void Climate::load_proj_co2(const std::string& fname){
   this->co2 = temutil::get_timeseries(fname, "co2");
 }
 
+/** Averages data over a given set of years. Used to produce a basic
+ *   climate data set for the EQ stage.
+ */
 std::vector<float> Climate::avg_over(const std::vector<float> & var, const int start_yr, const int end_yr) {
 
   int window_length = end_yr - start_yr;
+  BOOST_LOG_SEV(glg, fatal) << "Averaging over "<<window_length<<" years";
 
   int start_idx = start_yr - tseries_start_year;
   int end_idx = end_yr - tseries_start_year;
@@ -524,7 +557,9 @@ std::vector<float> Climate::avg_over(const std::vector<float> & var, const int s
 }
 
 
-// Interpolate from monthly values to daily. Does NOT account for leap years!
+/** Interpolate from monthly values to daily. Does NOT account
+ * for leap years!
+*/
 std::vector<float> Climate::monthly2daily(const std::vector<float>& mly_vals) {
 
   // setup a container for the daily data
@@ -567,6 +602,40 @@ std::vector<float> Climate::monthly2daily(const std::vector<float>& mly_vals) {
 
   return cal_yr_daily;
 }
+
+
+/** Produces summed or averaged monthly input values from a given
+ *   set of daily values
+ */
+std::vector<float> Climate::daily2monthly(std::vector<float> &dly_vals, std::string avg_or_sum){
+  BOOST_LOG_SEV(glg, fatal) << "Reducing daily variable to monthly ("<<avg_or_sum<<")";
+
+  std::vector<float> mly_results;
+  float month_result = 0.0;
+
+  std::vector<float>::iterator it = dly_vals.begin();
+  while(it != dly_vals.end()){
+
+    for(int midx=0; midx<MINY; midx++){
+      for(int dayidx=0; dayidx<DINM[midx]; dayidx++){
+
+        month_result += *it;
+        it++;
+      }
+
+      if(avg_or_sum == "avg"){
+        std::cout<<"monthly total: "<<month_result<<" days: "<<DINM[midx]<<std::endl;
+        month_result /= DINM[midx];
+      }
+
+      mly_results.push_back(month_result);
+      month_result = 0.0;
+    }
+  }
+
+  return mly_results;
+}
+
 
 // rough draft method to get "prev" Dec, this year, and "next" Jan that are
 // needed for monthly2daily interpolation...
