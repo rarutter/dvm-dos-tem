@@ -82,6 +82,7 @@ public:
 private:
 
   void load_from_file(const std::string& fname, int y, int x);
+  void compute_secondary_driving_vars(const std::string& fname, int y, int x);
 
   void split_precip();
 

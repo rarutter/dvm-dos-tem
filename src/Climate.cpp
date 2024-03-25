@@ -443,6 +443,9 @@ void Climate::load_from_file(const std::string& fname, int y, int x) {
                             << "done, not sure what will happen.";
   }
 
+  //Everything after this has less to do with loading from
+  // a file and more to do with climate setup.
+
   if(driving_timestep == "day"){
     //Prepare monthly averaged or summed versions of the daily
     // input for the processes and functions that assume monthly.
@@ -451,6 +454,35 @@ void Climate::load_from_file(const std::string& fname, int y, int x) {
     prec = daily2monthly(prec_d, "sum");
     nirr = daily2monthly(nirr_d, "avg");
   }
+
+  //Produce "secondary" variables like girr
+  compute_secondary_driving_vars(fname, y, x);
+
+  // Create a simplified historic climate for EQ by averaging input data
+  // over a year range specified here. The year choices should be exposed
+  // in the config file eventually. TODO
+  if(fname.find("historic") != std::string::npos){
+    avgX_tair = avg_over(tair, 1901, 1931);
+    avgX_prec = avg_over(prec, 1901, 1931);
+    avgX_nirr = avg_over(nirr, 1901, 1931);
+    avgX_vapo = avg_over(vapo, 1901, 1931);
+  }
+
+  // Do we need simplified 'avgX_' values for par, and cld??
+  // ===> YES: the derived variables should probably be based off the avgX
+  //      containers...
+
+
+  // Finally, need to create the daily dataset(s) by interpolating the monthly
+  // --> actually looking like these should not be calculated upon construction.
+  //     instead, they should get calculated each year...
+
+}
+
+/** Uses monthly primary driving variables to produce secondary
+ *   driving variables girr, cloudiness, par.
+ */
+void Climate::compute_secondary_driving_vars(const std::string& fname, int y, int x){
 
   // make some space for the derived variables
   girr = std::vector<float>(12, 0); // <-- !! wow, no need for year dimension??
@@ -481,26 +513,6 @@ void Climate::load_from_file(const std::string& fname, int y, int x) {
     par[i] = calculate_par(cld[i], nirr[i]);
   }
   BOOST_LOG_SEV(glg, debug) << "par = [" << temutil::vec2csv(par) << "]";
-
-  // Create a simplified historic climate for EQ by averaging input data
-  // over a year range specified here. The year choices should be exposed
-  // in the config file eventually. TODO
-  if(fname.find("historic") != std::string::npos){
-    avgX_tair = avg_over(tair, 1901, 1931);
-    avgX_prec = avg_over(prec, 1901, 1931);
-    avgX_nirr = avg_over(nirr, 1901, 1931);
-    avgX_vapo = avg_over(vapo, 1901, 1931);
-  }
-
-  // Do we need simplified 'avgX_' values for par, and cld??
-  // ===> YES: the derived variables should probably be based off the avgX
-  //      containers...
-
-
-  // Finally, need to create the daily dataset(s) by interpolating the monthly
-  // --> actually looking like these should not be calculated upon construction.
-  //     instead, they should get calculated each year...
-
 }
 
 /** This loads data from a projected climate data file, overwriting any old climate data*/
